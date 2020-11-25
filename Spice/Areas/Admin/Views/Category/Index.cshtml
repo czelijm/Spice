@@ -16,7 +16,10 @@
         <div class="col-6">
             <h2 class="text-info">Category List</h2>
         </div>
-        <div class="col-6 text-right"> Create Button </div>
+        <div class="col-6 text-right">
+         @*   <a asp-action="Create" asp-controller="Category" asp-area="Admin" class="btn btn-info"><i class="fas fa-plus"></i> &nbsp; Create new category</a>*@
+            <partial name="_CreateButtonPartial" />
+        </div>
     </div>
     <div class="">
         @if (Model.Count()>0)
