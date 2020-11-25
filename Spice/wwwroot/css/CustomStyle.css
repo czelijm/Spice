@@ -1,0 +1,25 @@
+﻿.search-background {
+    background: url('/images/dust_scratches.png');
+}
+
+.background-white {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.background-white-border {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.background-white-border-10-p {
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    border: 1px solid #ddd;
+}
