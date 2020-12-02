@@ -34,7 +34,37 @@ namespace Spice.Areas.Admin.Controllers
             return View();
         }
 
+        //POST - Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]//to prevent attacs
+        public async Task<IActionResult> Create(Category category) 
+        {
+            if (ModelState.IsValid)
+            {
+                await _db.Category.AddAsync(category);
+                await _db.SaveChangesAsync(); 
 
+                return RedirectToAction(nameof(Index)); // return to action method that call the view
+            }
+
+            return View(category);
+        }
+
+        //GET - Edit
+        public async Task<IActionResult> Edit(Guid? id) 
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _db.Category.FindAsync(id);
+            if (result==null)
+            {
+                return NotFound();
+            }
+            return View(result);
+        }
 
         //POST action method
         public async Task<IActionResult> Upsert(Guid? guid)
@@ -44,19 +74,23 @@ namespace Spice.Areas.Admin.Controllers
                 if (guid == null)
                 {
                     await _db.Category.AddAsync(Category);
-
+                    //await _db.SaveChangesAsync();
+                    //return RedirectToAction(nameof(Index));
                 }
                 else
                 {
                     _db.Category.UpdateRange(Category);
-                    return Redirect("Index");
+                    //await _db.SaveChangesAsync();
+                    //return Redirect("Index");
                 }
+                await _db.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
 
-            return View();
-
-
+            return View(Category);
         }
+
+
 
     }
 }

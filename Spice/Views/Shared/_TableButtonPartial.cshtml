@@ -1,0 +1,15 @@
+﻿@model Guid
+
+<td style="width:150px">
+    <div class="btn-group" role="group">
+        <a class="btn btn-success text-white" asp-action="Details" asp-route-Id="@Model">
+            <i class="fas fa-info"></i>
+        </a>@*asp-route-CustomName - for passing data to the action Method; what you have name it that will be the exacly name under which it be passed *@
+        <a class="btn btn-primary text-white" asp-action="Edit" asp-route-Id="@Model">
+            <i class="fas fa-edit"></i>
+        </a>@*asp-route-CustomName - for passing data to the action Method; what you have name it that will be the exacly name under which it be passed *@
+        <a class="btn btn-danger text-white" asp-action="Delete" asp-route-Id="@Model">
+            <i class="fas fa-trash-alt"></i>
+        </a>@*asp-route-CustomName - for passing data to the action Method; what you have name it that will be the exacly name under which it be passed *@
+    </div>
+</td>
