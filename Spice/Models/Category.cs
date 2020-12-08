@@ -8,6 +8,7 @@ namespace Spice.Models
 {
     public class Category : BaseEntity
     {
+        [Display(Name ="Category name")] //for diplaying "Category name" instead of Name
         [Required]
         public string Name { get; set; }
     }
