@@ -7,6 +7,7 @@ using Spice.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Spice.Models.ViewModels;
+using Spice.Utility;
 
 namespace Spice.Areas.Admin.Controllers
 {
@@ -41,6 +42,41 @@ namespace Spice.Areas.Admin.Controllers
         public async Task<IActionResult> Create()
         {
             return View(MenuItemViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Create")]
+        public async Task<IActionResult> CreatePOST() 
+        {
+            //We have to add that, becouse we haven't assing value to SubCategoryId only populate list using javaScript (call Action method form controller) so whe have to add that using data from form.   
+            MenuItemViewModel.MenuItem.SubCategoryId = new Guid(Request.Form["SubCategoryId"].ToString());
+
+            if (!ModelState.IsValid)
+            {
+                return View(MenuItemViewModel);
+            }
+
+            await _db.MenuItem.AddAsync(MenuItemViewModel.MenuItem);
+            await _db.SaveChangesAsync();
+
+            //Image saving section--------------------------------------------------
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            //Extracting Images that user has uploaded
+            var files = HttpContext.Request.Form.Files;
+            //Extract File from dataBase whatever have been saved
+            var menuItemFromDb = await _db.MenuItem.FindAsync(MenuItemViewModel.MenuItem.Id);
+
+            if (files.Count > 0)
+            {
+                //File uploaded
+            }
+            else 
+            {
+                //File Not uploaded, use default insted
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
