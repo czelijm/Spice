@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Spice.Models.ViewModels;
 using Spice.Utility;
+using System.IO;
 
 namespace Spice.Areas.Admin.Controllers
 {
@@ -70,13 +71,103 @@ namespace Spice.Areas.Admin.Controllers
             if (files.Count > 0)
             {
                 //File uploaded
+                var uploads = Path.Combine(webRootPath,"images");
+                var extension = Path.GetExtension(files[0].FileName); // use only first uploaded file
+
+                using (var filesStream = new FileStream(Path.Combine(uploads,MenuItemViewModel.MenuItem.Id.ToString()+extension),FileMode.Create))
+                {
+                    await files[0].CopyToAsync(filesStream);//copy stream to file to the server
+                }
+                //in db change image column to the location where iamge is saved
+                menuItemFromDb.Image = SD.ImageDefaulInnerPath + MenuItemViewModel.MenuItem.Id.ToString() + extension;
             }
             else 
             {
                 //File Not uploaded, use default insted
+                var uploads = Path.Combine(webRootPath,(SD.ImageDefaulInnerPath+SD.DefaultFoodImage));
+                var imageInnerPath =@"\"+SD.ImageDefaulInnerPath + MenuItemViewModel.MenuItem.Id.ToString() + ".png";
+                //System.IO.File.Copy(uploads, Path.Combine(webRootPath, imageInnerPath).ToString());
+                System.IO.File.Copy(uploads, webRootPath + imageInnerPath);
+                menuItemFromDb.Image = imageInnerPath;
             }
+            await _db.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
+
+        //GET - EDIT
+        public async Task<IActionResult> Edit(Guid id) 
+        {
+            if (id == null) { return NotFound(); }
+
+            MenuItemViewModel.MenuItem = await _db.MenuItem.Include(s => s.Category).Include(s => s.SubCategory).SingleOrDefaultAsync(s => s.Id == id);
+            MenuItemViewModel.SubCategoryList = await _db.SubCategory.Where(s => s.CategoryId == MenuItemViewModel.MenuItem.CategoryId).ToListAsync();
+
+            if (MenuItemViewModel.MenuItem == null) { return NotFound(); }
+
+            return View(MenuItemViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Edit")]
+        public async Task<IActionResult> EditPOST(Guid id)
+        {
+            if (id == null) { return NotFound(); }
+
+            //Becouse we assign it in form via JavaScript
+             
+            MenuItemViewModel.MenuItem.SubCategoryId = new Guid(Request.Form["SubCategoryId"].ToString());
+
+            //MenuItemViewModel.MenuItem
+            if (!ModelState.IsValid)
+            {
+                MenuItemViewModel.SubCategoryList = await _db.SubCategory.Where(s => s.CategoryId == MenuItemViewModel.MenuItem.SubCategoryId).ToListAsync();
+                return View(MenuItemViewModel);
+            }
+
+            var menuItemFromDb = await _db.MenuItem.FindAsync(id);
+            if (menuItemFromDb==null) { return NotFound(); }
+
+            //await _db.SaveChangesAsync();
+
+            //Image saving section--------------------------------------------------
+            var files = HttpContext.Request.Form.Files;
+
+            if (files.Count > 0)
+            {
+                string webRootPath = _webHostEnvironment.WebRootPath;
+                //Extracting Images that user has uploaded
+
+                var uploads = Path.Combine(webRootPath, "images");
+                var extension = Path.GetExtension(files[0].FileName); // use only first uploaded file
+                var imagePath = Path.Combine(webRootPath, menuItemFromDb.Image.TrimStart('\\'));
+
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+
+                using (var filesStream = new FileStream(Path.Combine(uploads, MenuItemViewModel.MenuItem.Id.ToString() + extension), FileMode.Create))
+                {
+                    await files[0].CopyToAsync(filesStream);//copy stream to file to the server
+                }
+                menuItemFromDb.Image = @"\" + SD.ImageDefaulInnerPath + MenuItemViewModel.MenuItem.Id.ToString() + extension;
+            }
+
+            menuItemFromDb.Name = MenuItemViewModel.MenuItem.Name; 
+            menuItemFromDb.Price = MenuItemViewModel.MenuItem.Price;
+            menuItemFromDb.Spicyness = MenuItemViewModel.MenuItem.Spicyness;
+            menuItemFromDb.SubCategoryId = MenuItemViewModel.MenuItem.SubCategoryId;
+            menuItemFromDb.CategoryId= MenuItemViewModel.MenuItem.CategoryId;
+            menuItemFromDb.Description= MenuItemViewModel.MenuItem.Description;
+
+
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
     }
 }
