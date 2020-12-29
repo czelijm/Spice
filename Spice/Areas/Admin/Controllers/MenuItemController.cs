@@ -168,6 +168,53 @@ namespace Spice.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        //GET - details
+        public async Task<IActionResult> Details(Guid id)
+        {
+            if (id == null) { return NotFound(); }
+            MenuItemViewModel.MenuItem = await _db.MenuItem.Include(s => s.Category).Include(s => s.SubCategory).SingleOrDefaultAsync(s => s.Id == id);
+            if (MenuItemViewModel.MenuItem == null) { return NotFound(); }
+            MenuItemViewModel.SubCategoryList = await _db.SubCategory.Where(s => s.CategoryId == MenuItemViewModel.MenuItem.SubCategoryId).ToListAsync();
+            return View(MenuItemViewModel);
+        }
 
+
+        //GET - Delete
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            if (id == null) { return NotFound(); }
+            MenuItemViewModel.MenuItem = await _db.MenuItem.Include(s => s.Category).Include(s => s.SubCategory).SingleOrDefaultAsync(s => s.Id == id);
+            if (MenuItemViewModel.MenuItem == null) { return NotFound(); }
+            MenuItemViewModel.SubCategoryList = await _db.SubCategory.Where(s => s.CategoryId == MenuItemViewModel.MenuItem.SubCategoryId).ToListAsync();
+            return View(MenuItemViewModel);
+        }
+
+        //POST - Delete
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeletePost(Guid id)
+        {
+            if (id == null) { return NotFound(); }
+            var menuItemFromDb = await _db.MenuItem.FindAsync(id);
+            if (menuItemFromDb == null) { return NotFound(); }
+            string webRootPath = _webHostEnvironment.WebRootPath;
+
+            if (!(menuItemFromDb.Image is null ))
+            {
+                var imagePath = Path.Combine(webRootPath, menuItemFromDb.Image.TrimStart('\\'));
+
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+            }
+
+            
+            _db.MenuItem.Remove(menuItemFromDb);
+            await _db.SaveChangesAsync();
+
+            return (RedirectToAction(nameof(Index)));
+        }
     }
 }
