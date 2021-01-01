@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Spice.Models.MenuItem>
+
+@if (Model.Count()>0)
+{
+    <div class="col-12">
+        <div class="row">
+            <h3 class="text-success">@Model.FirstOrDefault().Category.Name</h3>
+        </div>
+
+        @foreach (var item in Model)
+        {
+            <div class="container border border-info rounded col-12 mb-2 mt-2 p-1">
+                <div class="row ">
+                    <div class="col-md-3 col-sm-12 ">
+                        <img src="@item.Image" width="99%" style="border-radius:5px; border:1px solid #bbb9b9;" />
+                    </div>
+                    <div class="col-md-9 col-sm-12 ">
+                        <div class="row pr-3">
+                            <div class="col-8">
+                                <label class="text-primary" style="font-size:21px;color:maroon;">@item.Name</label>
+
+                                @if (item.Spicyness == ((int)Spice.Models.MenuItem.ESpicy.NotSpicy).ToString())
+                                {
+                                    <img srcset="/images/mild.png" title="Mild" />
+                                }
+                                @if (item.Spicyness == ((int)Spice.Models.MenuItem.ESpicy.Spicy).ToString())
+                                {
+                                    <img srcset="/images/spicy.png" title="Spicy" />
+                                }
+                                @if (item.Spicyness == ((int)Spice.Models.MenuItem.ESpicy.VerySpicy).ToString())
+                                {
+                                    <img srcset="/images/verySpicy.png" title="VerySpicy" />
+                                }
+                            </div>
+                            <div class="col-4 text-right" style="color:maroon;">
+                                <h4>$@item.Price</h4>
+                            </div>
+
+                        </div>
+                        <div class="row col-12 text-justify d-none d-md-block">@*if smothing is smaller than md then plock*@
+                            <p>@Html.Raw(item.Description)</p>
+                        </div>
+                        <div class="col-md-3 col-sm-12 offset-md-9 text-center">
+                            <a asp-action="Details" class="btn btn-success form-control" asp-route-id="@item.Id">Details</a>
+
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+}

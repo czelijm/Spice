@@ -10,29 +10,36 @@
             {
                 if (i == 0)
                 {
-
                     var base64 = Convert.ToBase64String(Model.CouponList.ToList()[i].Picture);
                     var imgSrc = String.Format("data:image/jpg;base64,{0}", base64);
 
                     <div class="carousel-item active">
                         <img src="@imgSrc" height="50px" class="d-block w-100" />
                     </div>
-
-
                 }
                 else
                 {
-
                     var base64 = Convert.ToBase64String(Model.CouponList.ToList()[i].Picture);
                     var imgSrc = String.Format("data:image/jpg;base64,{0}", base64);
 
                     <div class="carousel-item">
                         <img src="@imgSrc" height="50px" class="d-block w-100" />
                     </div>
-
-
                 }
             }
         </div>
     </div>
 }
+
+<br /><br />
+
+<div class="background-white container">
+    @foreach (var category in Model.CategoryList)
+    {
+
+        <div class="row" id="menu-wrapper">
+            <partial name="_ThunbnailAreaPartial" model="@Model.MenuItemList.Where(s=>s.Category.Name.Equals(category.Name))"/>
+        </div>
+
+    }
+</div>
