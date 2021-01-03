@@ -4,29 +4,40 @@
 
 @if (Model.CouponList.Count() > 0) 
 {
-    <div class="border">
-        <div class="carousel" data-ride="carousel" data-interval="2500">
-            @for (int i = 0; i < Model.CouponList.Count(); i++)
-            {
-                if (i == 0)
+    <div class="">
+        @*<div class="carousel" data-ride="carousel" data-interval="2500">*@
+        <div id="carouselExampleControls" class="carousel slide row" data-ride="carousel" data-interval="2500">
+            <div class="carousel-inner">
+                @for (int i = 0; i < Model.CouponList.Count(); i++)
                 {
-                    var base64 = Convert.ToBase64String(Model.CouponList.ToList()[i].Picture);
-                    var imgSrc = String.Format("data:image/jpg;base64,{0}", base64);
+                    if (i == 0)
+                    {
+                        var base64 = Convert.ToBase64String(Model.CouponList.ToList()[i].Picture);
+                        var imgSrc = String.Format("data:image/jpg;base64,{0}", base64);
 
-                    <div class="carousel-item active">
-                        <img src="@imgSrc" height="50px" class="d-block w-100" />
-                    </div>
-                }
-                else
-                {
-                    var base64 = Convert.ToBase64String(Model.CouponList.ToList()[i].Picture);
-                    var imgSrc = String.Format("data:image/jpg;base64,{0}", base64);
+                        <div class="carousel-item active col-10 offset-1">
+                            <img src="@imgSrc" height="50px" class="d-block w-100" />
+                        </div>
+                    }
+                    else
+                    {
+                        var base64 = Convert.ToBase64String(Model.CouponList.ToList()[i].Picture);
+                        var imgSrc = String.Format("data:image/jpg;base64,{0}", base64);
 
-                    <div class="carousel-item">
-                        <img src="@imgSrc" height="50px" class="d-block w-100" />
-                    </div>
+                        <div class="carousel-item col-10 offset-1">
+                            <img src="@imgSrc" height="50px" class="d-block w-100" />
+                        </div>
+                    }
                 }
-            }
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon carousel-color-addon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <span class="carousel-control-next-icon carousel-color-addon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
         </div>
     </div>
 }
@@ -34,12 +45,50 @@
 <br /><br />
 
 <div class="background-white container">
+    <ul id="menu-fliters" class="menu-filter-list list-inline text-center">
+        <li class="filter active btn btn-secondary ml-1 mr-1" data-filter=".menu-restaurant">Show All</li> 
+         @*//data- sufix is ignored by the asp.net and it will be use only filter, we will be accessing it by jQuerry using "filter" class-name*@
+        @foreach (var item in Model.CategoryList)
+        {
+            <li class="filter ml-1 mr-1" data-filter=".@item.Name.Replace(" ",string.Empty)">@item.Name</li>
+
+        }
+
+    </ul>
+
     @foreach (var category in Model.CategoryList)
     {
-
         <div class="row" id="menu-wrapper">
-            <partial name="_ThunbnailAreaPartial" model="@Model.MenuItemList.Where(s=>s.Category.Name.Equals(category.Name))"/>
+            <partial name="_ThunbnailAreaPartial" model="@Model.MenuItemList.Where(s=>s.Category.Name.Equals(category.Name))" />
         </div>
 
     }
 </div>
+
+@section Scripts{ 
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+
+    <script>
+        var posts = $('.post');
+        (function ($) {
+            $('#menu-fliters li').click(function () {
+                //for "buttons" as <li> on the website 
+                $('#menu-fliters li').removeClass('active btn btn-secondary');
+                $(this).addClass('active btn btn-secondary');
+
+                //extract name of selected category
+                var selectedFilter = $(this).data('filter');
+                //fadeout all menuitems
+                $(".menu-restaurant").fadeOut();
+                //wait 300ms and run the function -> slide down selectedItems
+                setTimeout(function () {
+                    $(selectedFilter).slideDown();
+                },300);
+            })
+        })(jQuery);
+
+        
+    </script>
+
+}
