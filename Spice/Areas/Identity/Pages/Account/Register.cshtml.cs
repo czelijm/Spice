@@ -72,8 +72,6 @@ namespace Spice.Areas.Identity.Pages.Account
             public string State { get; set; }
 
 
-
-
         }
 
         public async Task OnGetAsync(string returnUrl = null)

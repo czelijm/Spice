@@ -10,8 +10,8 @@ using Spice.Data;
 namespace Spice.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210103203342_ExtendIdentityUserModel")]
-    partial class ExtendIdentityUserModel
+    [Migration("20210104005006_BackUp")]
+    partial class BackUp
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -348,6 +348,9 @@ namespace Spice.Data.Migrations
 
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("FirstName")
                         .IsRequired()

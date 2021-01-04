@@ -17,5 +17,11 @@ namespace Spice.Models
         public string City { get; set; }
         public string PostalCode { get; set; }
         public string State { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+
+        public ApplicationUser()
+        {
+            this.CreatedAt = DateTime.Now;
+        }
     }
 }
