@@ -35,8 +35,8 @@ namespace Spice
             //to add role to user we have to use AddIdentity
             //services.AddScoped<IEmailSender, EmailSender>();
             services.AddIdentity<IdentityUser,IdentityRole>()
-                .AddDefaultTokenProviders() // if someone forgot password
                 .AddDefaultUI()
+                .AddDefaultTokenProviders() // if someone forgot password
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
