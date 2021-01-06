@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Spice.Data;
+using Spice.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,9 +36,13 @@ namespace Spice
             //to add role to user we have to use AddIdentity
             //services.AddScoped<IEmailSender, EmailSender>();
             services.AddIdentity<IdentityUser,IdentityRole>()
-                .AddDefaultUI()
+                //.AddDefaultUI()
                 .AddDefaultTokenProviders() // if someone forgot password
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            // fixing Register/Rogin error by Bhurgel
+            services.AddSingleton<IEmailSender, EmailSender>();
+
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
         }
