@@ -86,6 +86,10 @@ namespace Spice.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            string role = Request.Form["rdUserRole"];
+            
+            role ??= Utility.SD.CustomerEndUser;
+
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
@@ -123,7 +127,14 @@ namespace Spice.Areas.Identity.Pages.Account
                     }
 
                     //assign default role - manager
-                    await _userManager.AddToRoleAsync(user,Utility.SD.ManagerUser);
+                    //await _userManager.AddToRoleAsync(user,Utility.SD.ManagerUser);
+                    
+                    await _userManager.AddToRoleAsync(user,role);
+                    if (role.Equals(Spice.Utility.SD.CustomerEndUser))
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return LocalRedirect(returnUrl);
+                    }
 
                     _logger.LogInformation("User created a new account with password.");
 
@@ -145,8 +156,7 @@ namespace Spice.Areas.Identity.Pages.Account
                     //}
                     //else
                     //{
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        return RedirectToAction("Index","User", new { area = "Admin"});
                     //}
                 }
                 foreach (var error in result.Errors)

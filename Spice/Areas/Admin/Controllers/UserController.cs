@@ -22,8 +22,6 @@ namespace Spice.Areas.Admin.Controllers
             ApplicationUser = new ApplicationUser();
         }
 
-
-
         public async Task<IActionResult> Index()
         {
             //get logged user
