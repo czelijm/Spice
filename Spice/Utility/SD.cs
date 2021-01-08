@@ -9,7 +9,7 @@ namespace Spice.Utility
     {
         public static string DefaultFoodImage = "default_food.png";
         public static string ImageDefaulInnerPath = @"images\"; //@ for verbatim mode
-        public static string ManagerUser = "Manager";
+        public const string ManagerUser = "Manager";
         public static string KitchenUser = "Kitchen";
         public static string FrontDeskUser = "FrontDesk";
         public static string CustomerEndUser = "Customer";

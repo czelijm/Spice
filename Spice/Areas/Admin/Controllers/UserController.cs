@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Spice.Data;
 using Spice.Models;
+using Spice.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace Spice.Areas.Admin.Controllers
 {
+    [Authorize(Roles = SD.ManagerUser)]
     [Area("Admin")]
     public class UserController : Controller
     {
@@ -31,5 +34,32 @@ namespace Spice.Areas.Admin.Controllers
 
             return View(await _db.ApplicationUser.Where(u=>u.Id!=claim.Value).ToListAsync());
         }
+
+        
+        public async Task<IActionResult> Lock(string id) 
+        {
+            if (id == null) return NotFound();
+            var appUser = await _db.ApplicationUser.FirstOrDefaultAsync(m => m.Id == id);
+            if (appUser == null) return NotFound();
+            //it will be lock fo 1000 from now
+            appUser.LockoutEnd = DateTime.Now.AddYears(1000);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> UnLock(string id) 
+        {
+            if (id == null) return NotFound();
+            var appUser = await _db.ApplicationUser.FirstOrDefaultAsync(m => m.Id == id);
+            if (appUser == null) return NotFound();
+            //it will be lock fo 1000 from now
+            appUser.LockoutEnd = DateTime.Now;
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
     }
 }

@@ -1,8 +1,12 @@
 ﻿@model Spice.Models.ViewModels.IndexViewModel
 
+@{
+    ViewData["Title"] = "Home";
+}
+
 <br />
 
-@if (Model.CouponList.Count() > 0) 
+@if (Model.CouponList.Count() > 0)
 {
     <div class="">
         @*<div class="carousel" data-ride="carousel" data-interval="2500">*@
@@ -42,12 +46,13 @@
     </div>
 }
 
-<br /><br />
+<br />
+<br />
 
 <div class="background-white container">
     <ul id="menu-fliters" class="menu-filter-list list-inline text-center">
-        <li class="filter active btn btn-secondary ml-1 mr-1" data-filter=".menu-restaurant">Show All</li> 
-         @*//data- sufix is ignored by the asp.net and it will be use only filter, we will be accessing it by jQuerry using "filter" class-name*@
+        <li class="filter active btn btn-secondary ml-1 mr-1" data-filter=".menu-restaurant">Show All</li>
+        @*//data- sufix is ignored by the asp.net and it will be use only filter, we will be accessing it by jQuerry using "filter" class-name*@
         @foreach (var item in Model.CategoryList)
         {
             <li class="filter ml-1 mr-1" data-filter=".@item.Name.Replace(" ",string.Empty)">@item.Name</li>
@@ -65,7 +70,7 @@
     }
 </div>
 
-@section Scripts{ 
+@section Scripts{
 
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 
@@ -73,7 +78,7 @@
         var posts = $('.post');
         (function ($) {
             $('#menu-fliters li').click(function () {
-                //for "buttons" as <li> on the website 
+                //for "buttons" as <li> on the website
                 $('#menu-fliters li').removeClass('active btn btn-secondary');
                 $(this).addClass('active btn btn-secondary');
 
@@ -84,11 +89,11 @@
                 //wait 300ms and run the function -> slide down selectedItems
                 setTimeout(function () {
                     $(selectedFilter).slideDown();
-                },300);
+                }, 300);
             })
         })(jQuery);
 
-        
+
     </script>
 
 }

@@ -9,9 +9,11 @@ using Microsoft.AspNetCore.Hosting;
 using Spice.Models.ViewModels;
 using Spice.Utility;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Spice.Areas.Admin.Controllers
 {
+    [Authorize(Roles = SD.ManagerUser)]
     [Area("Admin")]
     public class MenuItemController : Controller
     {
