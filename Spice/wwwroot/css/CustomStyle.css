@@ -51,3 +51,7 @@
     /*color:InfoBackground !important;*/
     filter: invert(1) !important;
 }
+
+.read-only-background {
+    background-color:white !important;
+}

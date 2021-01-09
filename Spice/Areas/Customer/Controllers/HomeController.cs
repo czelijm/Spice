@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Spice.Data;
@@ -34,6 +35,23 @@ namespace Spice.Controllers
             };
 
             return View(indexViewModel);
+        }
+
+
+        [Authorize]
+        public async Task<IActionResult> Details(Guid id) 
+        {
+            if (id == null) return NotFound();
+            var menuItemFromDb = await _db.MenuItem.Include(m=>m.Category).Include(m=>m.SubCategory).FirstOrDefaultAsync(m => m.Id==id);
+            if (menuItemFromDb == null) return NotFound();
+
+            ShoppingCart shoppingCart = new ShoppingCart()
+            {
+                MenuItem = menuItemFromDb,
+                MenuItemId = menuItemFromDb.Id,
+            };
+
+            return View(shoppingCart);
         }
 
         public IActionResult Privacy()
