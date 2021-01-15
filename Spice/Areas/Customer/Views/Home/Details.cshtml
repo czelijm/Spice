@@ -12,9 +12,9 @@
 
 
 @* Becouse We have image, image is fetch to the controler *@
-<form method="post">
+<form method="post" asp-action="Details">
     <div class="background-white border row">
-        <input type="hidden" asp-for="MenuItem.Id" />
+        <input type="hidden" asp-for="MenuItemId" />
         <div asp-validation-summary="ModelOnly" class="text-danger" />
 
         <div class="col-12 pb-4 d-md-none">
@@ -65,10 +65,10 @@
 
             <div class="form-group row">
                 <div class="col-md-4">
-                    <label asp-for="MenuItem.CategoryId" class="text-info font-weight-bold"></label>
+                    <label asp-for="@Model.MenuItem.CategoryId" class="text-info font-weight-bold"></label>
                 </div>
                 <div class="col-md-8">
-                    <input asp-for="@Model.MenuItem.Category.Name" readonly id="CategoryId" class="read-only-background form-control"></input>
+                    <input asp-for="MenuItem.Category.Name" readonly id="CategoryId" class="read-only-background form-control"/>
                 </div>
             </div>
 
@@ -78,7 +78,7 @@
                 </div>
                 <div class="col-md-8">
                     @*Populate with JavaScript, firstly empty dropdrown*@
-                    <input asp-for="@Model.MenuItem.SubCategory.Name" readonly name="SubCategoryId" id="SubCategoryId" class="read-only-background form-control"></input>
+                    <input asp-for="MenuItem.SubCategory.Name" readonly name="SubCategoryId" id="SubCategoryId" class="read-only-background form-control"/>
                 </div>
             </div>
 
@@ -87,7 +87,7 @@
                     <label asp-for="MenuItem.Spicyness" class="text-info font-weight-bold"></label>
                 </div>
                 <div class="col-md-8">
-                    <select asp-for="MenuItem.Spicyness" disabled asp-items="@Html.GetEnumSelectList<MenuItem.ESpicy>()" class="read-only-background form-control"></select>
+                    <select asp-for="MenuItem.Spicyness" readonly asp-items="@Html.GetEnumSelectList<MenuItem.ESpicy>()" class="read-only-background form-control"></select>
                 </div>
             </div>
 
@@ -96,7 +96,7 @@
                     <label asp-for="Count" class="text-info font-weight-bold"></label>
                 </div>
                 <div class="col-md-8">
-                    <input asp-for="Count" class="form-control"></input>
+                    <input asp-for="Count" class="form-control"/>
                 </div>
                 <span asp-validation-for="Count" class="text-danger" />
             </div>

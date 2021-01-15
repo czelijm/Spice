@@ -44,15 +44,20 @@ namespace Spice
             services.AddSingleton<IEmailSender, EmailSender>();
 
             //for logIn logOut redirection
-            services.ConfigureApplicationCookie(options=> {
+            services.ConfigureApplicationCookie(options=> 
+            {
                 options.LoginPath = $"/Identity/Account/Login";
                 options.LogoutPath = $"/Identity/Account/Logout";
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
-
             });
 
 
             services.AddControllersWithViews();
+            services.AddSession(options=> {
+                options.Cookie.IsEssential = true;
+                options.IdleTimeout = TimeSpan.FromMinutes(30); //session will be abbadoned after 30min of lack of the users's action
+                options.Cookie.HttpOnly = true;
+            });
             services.AddRazorPages().AddRazorRuntimeCompilation();
         }
 
@@ -77,6 +82,8 @@ namespace Spice
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
