@@ -17,10 +17,10 @@ namespace Spice.Utility
         public static string CustomerEndUser = "Customer";
         public static string[] UserArray = { ManagerUser, KitchenUser, FrontDeskUser, CustomerEndUser};
 
-        public static string SessionCountCookie = "ssCount";
+        //public static string SessionCountCookie = "ssCount";
         public static string SessionCartCountCookie = "ssCartCount";
-
     }
+
 }
 
 
