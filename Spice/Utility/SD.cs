@@ -8,13 +8,17 @@ namespace Spice.Utility
     public static class SD
     {
         public static string DefaultFoodImage = "default_food.png";
+        
         public static string ImageDefaulInnerPath = @"images\"; //@ for verbatim mode
+
         public const string ManagerUser = "Manager";
         public static string KitchenUser = "Kitchen";
         public static string FrontDeskUser = "FrontDesk";
         public static string CustomerEndUser = "Customer";
         public static string[] UserArray = { ManagerUser, KitchenUser, FrontDeskUser, CustomerEndUser};
 
+        public static string SessionCountCookie = "ssCount";
+        public static string SessionCartCountCookie = "ssCartCount";
 
     }
 }

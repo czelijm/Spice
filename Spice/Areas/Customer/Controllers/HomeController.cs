@@ -40,6 +40,15 @@ namespace Spice.Controllers
                 CouponList = await _db.Coupon.Where(s=>s.IsActive==true).ToListAsync()
             };
 
+            var claimsId = (ClaimsIdentity)User.Identity;
+            var claim = claimsId.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (claim!=null) //if user is logged
+            {
+                var cnt = (await _db.ShoppingCart.Where(i => i.ApplicationUserId.ToString().Equals(claim.Value)).ToListAsync()).Count;
+                HttpContext.Session.SetInt32(Spice.Utility.SD.SessionCartCountCookie, cnt);
+            }
+
             return View(indexViewModel);
         }
 
@@ -93,7 +102,7 @@ namespace Spice.Controllers
                 await _db.SaveChangesAsync();
 
                 var itemCount = (await _db.ShoppingCart.Where(c => c.ApplicationUserId.ToString().Equals(ShoppingCart.ApplicationUserId.ToString())).ToListAsync()).Count();
-                HttpContext.Session.SetInt32("ssCount",itemCount);
+                HttpContext.Session.SetInt32(Spice.Utility.SD.SessionCartCountCookie,itemCount);
 
                 return RedirectToAction(nameof(Index));
             }
