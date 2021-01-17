@@ -1,0 +1,36 @@
+﻿@model Spice.Models.ViewModels.OrderDetailsCartViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="background-white-border">
+    <form method="post">
+        @if (Model.ListCart.Count() > 0)
+        {
+            <br />
+            <input id="userId" hidden asp-for="@Model.ListCart[0].ApplicationUserId" />
+            <div class="container">
+                <div class="card">
+                    <div class="card-header bg-dark text-light ml-0 row container">
+                        <div class="col-6">
+                            <i class="fa fa-shopping-cart"></i> &nbsp;
+                            Shopping Cart
+                        </div>
+                        <div class="col-6 text-right">
+                            <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="btn btn-outline-info btn-sm"> Continue Shopping</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="">
+                No items added to the shopping cart ... :(
+            </div>
+        }
+
+    </form>
+</div>
