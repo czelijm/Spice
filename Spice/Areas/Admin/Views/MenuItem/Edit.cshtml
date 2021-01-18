@@ -1,5 +1,6 @@
 ﻿@model Spice.Models.ViewModels.MenuItemViewModel
 @using Spice.Extensions
+@using Spice.Utility
 
 @{
     ViewData["Title"] = "Edit";
@@ -40,7 +41,8 @@
             </div>
             <div class="form-group row">
                 <div class="col-4">
-                    <label asp-for="MenuItem.Price" class="col-form-label"></label>
+                    <label asp-for="MenuItem.Price" class="col-form-label"></label><span class=""> in @SD.DefaultCultureInfo.IetfLanguageTag.ToString().Split("-")[1] @SD.DefaultCultureInfo.NumberFormat.CurrencySymbol</span>
+
                 </div>
                 <div class="col-8">
                     <input asp-for="MenuItem.Price" class="form-control" />

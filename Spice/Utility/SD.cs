@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,6 +20,9 @@ namespace Spice.Utility
 
         //public static string SessionCountCookie = "ssCount";
         public static string SessionCartCountCookie = "ssCartCount";
+
+		public static string DefaultCultureTag = "en-US";
+		public static CultureInfo DefaultCultureInfo = new CultureInfo(DefaultCultureTag);
 
 		public static string ConvertToRawHtml(string source)
 		{

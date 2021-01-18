@@ -1,5 +1,7 @@
 ﻿@model Spice.Models.ShoppingCart
 @using Spice.Extensions
+@using System.Globalization
+@using Spice.Utility
 
 @{
     ViewData["Title"] = "Details";
@@ -46,7 +48,7 @@
             </div>
             <div class="form-group row">
                 <div class="col-md-4">
-                    <label asp-for="MenuItem.Price" class="text-info font-weight-bold"></label>
+                    <label asp-for="MenuItem.Price" class="text-info font-weight-bold"></label><span class="text-info font-weight-bold"> in @SD.DefaultCultureInfo.IetfLanguageTag.ToString().Split("-")[1] @SD.DefaultCultureInfo.NumberFormat.CurrencySymbol</span>
                 </div>
                 <div class="col-md-8">
                     <input asp-for="MenuItem.Price" readonly class="read-only-background form-control" />

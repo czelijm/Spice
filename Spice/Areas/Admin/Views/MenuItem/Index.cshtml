@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<MenuItem>
+@using Spice.Utility
 
 @{
     ViewData["Title"] = "Index";
@@ -27,7 +28,8 @@
                         @Html.DisplayNameFor(m => m.Name)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(m => m.Price)
+                        @Html.DisplayNameFor(m => m.Price) <span class=""> in @SD.DefaultCultureInfo.IetfLanguageTag.ToString().Split("-")[1] @SD.DefaultCultureInfo.NumberFormat.CurrencySymbol</span>
+
                     </th>
                     <th>@Html.DisplayNameFor(m => m.Category.Id)</th>
                     <th>@Html.DisplayNameFor(m => m.SubCategory.Id)</th>
