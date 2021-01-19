@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spice.Models;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace Spice.Utility
 
         //public static string SessionCountCookie = "ssCount";
         public static string SessionCartCountCookie = "ssCartCount";
+        public static string SessionCouponCodeCookie = "ssCouponCode";
 
 		public static string DefaultCultureTag = "en-US";
 		public static CultureInfo DefaultCultureInfo = new CultureInfo(DefaultCultureTag);
@@ -50,6 +52,27 @@ namespace Spice.Utility
 				}
 			}
 			return new string(array, 0, arrayIndex);
+		}
+
+		public static decimal DicountedPrice(Coupon coupon, decimal orderTotalOriginal) 
+		{
+            if (coupon == null || ((decimal) coupon.MinimumAmmount )> orderTotalOriginal)
+            {
+				return orderTotalOriginal;
+            }
+			//decimal result = 0;
+            if (Convert.ToInt32(coupon.CouponType)==(int)Coupon.ECouponType.Dollars)
+            {
+				//10$ of 100$
+				orderTotalOriginal -= (decimal)coupon.Dsicount;
+            }
+            else if (Convert.ToInt32(coupon.CouponType) == (int)Coupon.ECouponType.Percent)
+            {
+				orderTotalOriginal -= (orderTotalOriginal * (decimal)coupon.Dsicount / 100); 
+            }
+
+			return Math.Round(orderTotalOriginal, 2);
+			
 		}
 
 	}

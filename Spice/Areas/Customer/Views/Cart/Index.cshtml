@@ -62,7 +62,6 @@
                             </div>
                             <hr />  
                         }
-
                         <div class="row ">
                             <div class="col-12 col-md-5">
                                 <div class="row">
@@ -104,3 +103,21 @@
 
     </form>
 </div>
+
+
+@section Scripts{ 
+
+    <script>
+        $(function () {
+            var couponCode = document.getElementById('txtCouponCode').value;
+            if (couponCode.length > 0) {
+                document.getElementById('btnCouponAdd').style.display = 'none';
+                document.getElementById('btnCouponRemove').style.display = '';
+            } else {
+                document.getElementById('btnCouponAdd').style.display = '';
+                document.getElementById('btnCouponRemove').style.display = 'none';
+            }
+        });
+    </script>
+
+}
