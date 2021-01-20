@@ -7,3 +7,233 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div class="background-white-border">
+    <form method="post">
+        <br />
+
+        <input id="userId" hidden asp-for="@Model.ListCart[0].ApplicationUserId" />
+        @if (Model.ListCart.Count() > 0)
+        {
+            <div class="container">
+                <div class="card">
+                    <div class="card-header bg-dark text-light ml-0 row container">
+                        <div class="col-6">
+                            <i class="fa fa-shopping-cart"></i> &nbsp;
+                            Order Summary
+                        </div>
+                        <div class="col-6 text-right">
+                            <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="btn btn-outline-info btn-sm"> Back to the Cart</a>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="container rounded p-2">
+                            <div class="row">
+                                <div class="col-12 col-lg-6 pb-4">
+                                    <div class="row">
+                                        <h4 class="justify-content-between align-items-center mb-3">
+                                            <span class="text-info">Pickup Details:</span>
+                                        </h4>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Name</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input class="h-100 w-100" id="txtName" asp-for="@Model.OrderHeader.PickupName"/>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Phone</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input class="h-100 w-100" id="txtPhone" asp-for="@Model.OrderHeader.PhoneNumber"/>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Date</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input type="text" id="datePicker" value="" class="h-100 w-100" asp-for="@Model.OrderHeader.PickupDate"/>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Time</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input type="text" id="timePicker" value="" class="h-100 w-100" asp-for="@Model.OrderHeader.PickupTime"/>
+                                        </div>
+                                    </div>
+                                    <div class="row my-1">
+                                        <div class="col-3">
+                                            <label>Comment</label>
+                                        </div>
+                                        <div class="col-9">
+                                            @*<textarea asp-for="@Model.OrderHeader.Comments" style="height:100px" class="h-25"></textarea>*@
+                                            <textarea asp-for="@Model.OrderHeader.Comments" class="w-200 form-control" style="height:150%;"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-lg-5 offset-lg-1">
+                                    <div class="row">
+                                        <h4 class="justify-content-between align-items-center mb-3">
+                                            <span class="text-info">Order Summary:</span>
+                                        </h4>
+                                    </div>
+                                    <ul class="list-group mb-3">
+                                        @{decimal total = 0.0M;}
+                                        @foreach (var item in Model.ListCart)
+                                        {
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <div>
+                                                    <h6 class="m-0"> @item.MenuItem.Name</h6>
+                                                    <small class="text-muted">Quantity: @item.Count</small>
+                                                    @* Another way to calculate total, only for demo reasons *@
+                                                </div>
+                                                    <span class="text-muted">@string.Format(@SD.DefaultCultureInfo, "{0:c}", item.MenuItem.Price * item.Count)</span>
+                                                    @{ total += (decimal)(item.MenuItem.Price * (double)item.Count);}
+                                            </li>
+                                        }
+                                        @if (Model.OrderHeader.CouponCode != null)
+                                        {
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <div class="text-success">
+                                                    <h6 class="m-0"> Promo Code</h6>
+                                                    <small class="text-muted">@Model.OrderHeader.CouponCode</small>
+                                                    @*<small class="text-muted">@Model.OrderHeader.OrderTotalOriginal</small>*@
+                                                </div>
+                                                    <span class="text-success">-@string.Format(@SD.DefaultCultureInfo, "{0:c}", total - decimal.Parse(Model.OrderHeader.OrderTotalDiscount))</span>
+                                            </li>
+                                        }
+                                        <li class="list-group-item d-flex justify-content-between bg-light">
+                                            <div class="text-success">
+                                                <small class="text-info"> Order Total (@SD.DefaultCultureInfo.NumberFormat.CurrencySymbol)</small>
+                                                @*<small class="text-muted">@Model.OrderHeader.CouponCode</small>*@
+                                            </div>
+                                                <span class="text-info"><strong>@string.Format(@SD.DefaultCultureInfo, "{0:c}", decimal.Parse(Model.OrderHeader.OrderTotalDiscount))</strong></span>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="col-12 col-lg-4 offset-lg-8 col-md-6 offset-md-6">
+                            @*<a asp-action="Summary" asp-area="Customer" asp-controller="Cart" class="btn btn-success form-control">Order</a>*@
+                            <button type="submit" id="btnSubmitOrder" onclick="return validateInput()" value="Place Order"  class="btn btn-success form-control">Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="">
+                No items added to the shopping cart ... :(
+            </div>
+        }
+
+    </form>
+</div>
+
+@section Scripts{ 
+
+    @* We need time picker only for this view *@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.13.16/jquery.timepicker.min.js" integrity="sha512-huX0hcUeIkgR0QvTlhxNpIAcwiN2sABe3VwyzeZAYjMPn3OU71t9ZLlk6qs27Q049SPgeB/Az12jv/ayedXoAw==" crossorigin="anonymous"></script>
+
+    <script>
+        $(function () {
+
+            var minDt = 0;
+            if (getTimeFromCurrentDate >= 20) {
+                minDt = 1;
+
+            }
+
+            $('#datePicker').datepicker({ minDate: minDt, maxDate: "+1W" }); //0 - today, + 1W Week ; 1 - next day
+            $('#timePicker').timepicker({ 'minTime': '@SD.OpenStoreHourStringEU', 'maxTime':'@SD.CloseStoreHourStringEU', 'step':'@SD.timeIntervalTimePickerStringMinutes'});
+        });
+
+
+        function setPickupTime() {
+            var dateSelected = document.getElementById('datePicker').value;
+            var dt = new Date(dateSelected);
+            var today = new Date();
+
+            dt.setHours(0, 0, 0, 0);
+
+            if (dt>today) {
+                selectedTime = '@SD.OpenStoreHourStringEU';
+            } else {
+                selectedTime = getTimeFromCurrentDate().toLocaleTimeString().slice(0,5);
+            }
+
+            //console.log(selectedTime);
+
+            $('#timePicker').timepicker('option', 'minTime', selectedTime);
+
+        }
+
+        function getTimeFromCurrentDate() {
+            var currentDt = new Date();
+            var minTime = new Date();
+            var constrainDate = Number(@SD.OpenStoreHourStringEU.Substring(0, 2));
+            if (currentDt.getHours() < constrainDate) {
+                minTime.setHours(constrainDate); // = String(++constrainDate) + ':00'
+                minTime.setMinutes(0);
+                //console.log(minTime);
+            } else {
+                if (currentDt.getMinutes() < 30) {
+                    minTime.setHours(currentDt.getHours() + 1);  // = (currentDt.getHours() + 2).toString() + ':30';
+                    minTime.setMinutes(Number(@SD.timeIntervalTimePickerStringMinutes));
+                } else {
+                    minTime.setHours(currentDt.getHours() + 2);  // = (currentDt.getHours() + 2).toString() + ':30';
+                    minTime.setMinutes(0);
+                }
+            }
+            //console.log(minTime);
+            return minTime;
+        }
+
+        $('#datePicker').change(function () {
+            setPickupTime();
+        });
+
+
+        function validateInput() {
+            var itemList = [];
+            itemList.push({
+                value: document.getElementById('txtName').value,
+                message: "Please enter the pickup name"
+            });
+            itemList.push({
+                value: document.getElementById('txtPhone').value,
+                message: "Please enter the phone number"
+            });
+            itemList.push({
+                value: document.getElementById('datePicker').value,
+                message: "Please select the pick up date"
+            });
+            itemList.push({
+                value: document.getElementById('timePicker').value,
+                message: "Please select the pick up time"
+                });
+
+            for (i in itemList) {
+                if (itemList[i].value.toString()=='') {
+                    alert(itemList[i].message);
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+    </script>
+}

@@ -26,6 +26,13 @@ namespace Spice.Utility
 		public static string DefaultCultureTag = "en-US";
 		public static CultureInfo DefaultCultureInfo = new CultureInfo(DefaultCultureTag);
 
+		public static string OpenStoreHourStringUS = "11:00 AM";
+		public static string OpenStoreHourStringEU = "11:00";
+		public static string CloseStoreHourStringUS = "9:00 PM";
+		public static string CloseStoreHourStringEU = "21:00";
+		public static string timeIntervalTimePickerStringMinutes= "30";
+
+
 		public static string ConvertToRawHtml(string source)
 		{
 			char[] array = new char[source.Length];
