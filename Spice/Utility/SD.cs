@@ -23,6 +23,7 @@ namespace Spice.Utility
         public static string SessionCartCountCookie = "ssCartCount";
         public static string SessionCouponCodeCookie = "ssCouponCode";
 
+
 		public static string DefaultCultureTag = "en-US";
 		public static CultureInfo DefaultCultureInfo = new CultureInfo(DefaultCultureTag);
 
@@ -30,8 +31,21 @@ namespace Spice.Utility
 		public static string OpenStoreHourStringEU = "11:00";
 		public static string CloseStoreHourStringUS = "9:00 PM";
 		public static string CloseStoreHourStringEU = "21:00";
-		public static string timeIntervalTimePickerStringMinutes= "30";
+		public static string TimeIntervalTimePickerStringMinutes= "30";
 
+		public static class Status 
+		{
+			public static string orderSubmitted = "Submitted";
+			public static string orderInProcess = "Being Prepared";
+			public static string orderReadyForPickup = "Ready for pickup";
+			public static string orderCompleted = "Completed";
+			public static string orderCanceled = "Canceled";
+			
+			public static string paymentPending  = "Pending";
+			public static string paymentApproved = "Approved";
+			public static string paymentRejected = "Rejected";
+			
+		}
 
 		public static string ConvertToRawHtml(string source)
 		{

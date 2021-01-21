@@ -157,7 +157,7 @@
             }
 
             $('#datePicker').datepicker({ minDate: minDt, maxDate: "+1W" }); //0 - today, + 1W Week ; 1 - next day
-            $('#timePicker').timepicker({ 'minTime': '@SD.OpenStoreHourStringEU', 'maxTime':'@SD.CloseStoreHourStringEU', 'step':'@SD.timeIntervalTimePickerStringMinutes'});
+            $('#timePicker').timepicker({ 'minTime': '@SD.OpenStoreHourStringEU', 'maxTime':'@SD.CloseStoreHourStringEU', 'step':'@SD.TimeIntervalTimePickerStringMinutes'});
         });
 
 
@@ -191,7 +191,7 @@
             } else {
                 if (currentDt.getMinutes() < 30) {
                     minTime.setHours(currentDt.getHours() + 1);  // = (currentDt.getHours() + 2).toString() + ':30';
-                    minTime.setMinutes(Number(@SD.timeIntervalTimePickerStringMinutes));
+                    minTime.setMinutes(Number(@SD.TimeIntervalTimePickerStringMinutes));
                 } else {
                     minTime.setHours(currentDt.getHours() + 2);  // = (currentDt.getHours() + 2).toString() + ':30';
                     minTime.setMinutes(0);
