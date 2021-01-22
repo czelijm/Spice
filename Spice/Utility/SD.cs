@@ -36,6 +36,9 @@ namespace Spice.Utility
 		public static string TransactionDataName = "Spice Restaurant";
 		public static string TransactionDataDescription = "11 Cool street, Order Charge";
 		public static string TransactionDataImage = "https://stripe.com/img/documentation/checkout/marketplace.png";
+		public static string TransactionCurrency = "usd";
+		public static string TransactionSucceeded = "succeeded";
+
 
 
         public static class Status 

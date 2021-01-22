@@ -5,6 +5,7 @@ using Spice.Data;
 using Spice.Models;
 using Spice.Models.ViewModels;
 using Spice.Utility;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -132,7 +133,8 @@ namespace Spice.Areas.Customer.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Summary")]
-        public async Task<IActionResult> SummaryPost()
+        public async Task<IActionResult> SummaryPost(string stripeToken)
+        //Stripe's Script pass string token 
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -147,8 +149,9 @@ namespace Spice.Areas.Customer.Controllers
             OrderDetailsCart.OrderHeader.UserId = claim.Value;
             OrderDetailsCart.OrderHeader.Status = SD.Status.paymentPending;
             OrderDetailsCart.OrderHeader.PickupTime = Convert.ToDateTime(OrderDetailsCart.OrderHeader.PickupDate.ToShortDateString() + " " + 
-                                                            OrderDetailsCart.OrderHeader.PickupTime.ToShortDateString());
+                                                            OrderDetailsCart.OrderHeader.PickupTime.TimeOfDay.ToString());
             OrderDetailsCart.OrderHeader.OrderTotalOriginal = "0";
+            OrderDetailsCart.OrderHeader.OrderTotalDiscount = "0";
 
             List<OrderDetails> orderDetailList = new List<OrderDetails>();
             //We have to add OrderHeader ecouse order details need orderHedear.Id
@@ -156,6 +159,8 @@ namespace Spice.Areas.Customer.Controllers
             await _db.SaveChangesAsync();
 
             OrderDetailsCart.ListCart = await _db.ShoppingCart.Where(c => c.ApplicationUserId.ToString().Equals(claim.Value)).ToListAsync();
+
+            decimal orderTotalAcc = 0;
  
             foreach (var list in OrderDetailsCart.ListCart)
             {
@@ -169,13 +174,14 @@ namespace Spice.Areas.Customer.Controllers
                     Price = list.MenuItem.Price.ToString(),
                     Count = list.Count,
                 };
-                OrderDetailsCart.OrderHeader.OrderTotalOriginal +=  (orderDetails.Count * decimal.Parse(orderDetails.Price)).ToString();
+                orderTotalAcc +=  (orderDetails.Count * decimal.Parse(orderDetails.Price));
                 await _db.OrderDetails.AddAsync(orderDetails);
                 //decimal orderTotal = decimal.Parse(OrderDetailsCart.OrderHeader.OrderTotalDiscount);
                 //orderTotal+=(decimal)(list.MenuItem.Price*list.Count);
                 //OrderDetailsCart.OrderHeader.OrderTotalDiscount = orderTotal.ToString();
 
             }
+            OrderDetailsCart.OrderHeader.OrderTotalOriginal = orderTotalAcc.ToString();
             OrderDetailsCart.OrderHeader.OrderTotalDiscount = OrderDetailsCart.OrderHeader.OrderTotalOriginal;
             //OrderDetailsCart.OrderHeader.PickupName = appUser.FirstName + " " + appUser.LastName;
             //OrderDetailsCart.OrderHeader.PhoneNumber = appUser.PhoneNumber;
@@ -195,6 +201,39 @@ namespace Spice.Areas.Customer.Controllers
             HttpContext.Session.SetInt32(SD.SessionCartCountCookie, 0);
             await _db.SaveChangesAsync();
 
+            //stripe transaction part
+            var options = new ChargeCreateOptions
+            {
+                Amount = (long?)(decimal.Parse(OrderDetailsCart.OrderHeader.OrderTotalDiscount) * 100),
+                Currency = SD.TransactionCurrency,
+                Description = "Order ID : " + OrderDetailsCart.OrderHeader.Id.ToString(),
+                Source = stripeToken
+            };
+            var service = new ChargeService();
+            //start transaction
+            Charge charge = await service.CreateAsync(options);
+
+            if (charge.BalanceTransactionId == null)
+            {
+                OrderDetailsCart.OrderHeader.PaymentStatus = SD.Status.paymentRejected;
+            }
+            else
+            {
+                OrderDetailsCart.OrderHeader.TransactionId = charge.BalanceTransactionId; 
+            }
+
+            if (charge.Status.ToLower()==SD.TransactionSucceeded)
+            {
+                OrderDetailsCart.OrderHeader.PaymentStatus = SD.Status.paymentApproved;
+                OrderDetailsCart.OrderHeader.Status = SD.Status.orderSubmitted;
+            }
+            else
+            {
+                OrderDetailsCart.OrderHeader.PaymentStatus = SD.Status.paymentRejected;
+            }
+
+
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index","Home");
             //return RedirectToAction("Confirm","Order",new {id=OrderDetailsCart.OrderHeader.Id });
         }

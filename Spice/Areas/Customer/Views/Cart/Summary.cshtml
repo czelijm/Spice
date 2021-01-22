@@ -11,7 +11,7 @@
 }
 
 <div class="background-white-border">
-    <form method="post">
+    <form method="post" >
         <br />
 
         <input id="userId" hidden asp-for="@Model.ListCart[0].ApplicationUserId" />
@@ -145,7 +145,7 @@
                             <script>
                                 document.getElementsByClassName('stripe-button-el')[0].style.display = 'none';
                             </script>
-                            <button type="submit" id="btnSubmitOrder" onclick="return validateInput()" value="Place Order" class="btn btn-success form-control">Order</button>
+                            <button type="submit" id="btnSubmitOrder" onclick="return validateInput()" value="Place Order" class="btn btn-success form-control" asp-action="summary">Order</button>
                         </div>
                     </div>
                 </div>
@@ -170,19 +170,19 @@
         $(function () {
 
             var minDt = 0;
-            if (getTimeFromCurrentDate >= 20) {
+            if (getTimeFromCurrentDate() >= 20) {
                 minDt = 1;
 
             }
 
-            $('#datePicker').datepicker({ minDate: minDt, maxDate: "+1W" }); //0 - today, + 1W Week ; 1 - next day
+            $('#datePicker').datepicker({ minDate: minDt, maxDate: "+1W", dateFormat:"dd/mm/yy"}); //0 - today, + 1W Week ; 1 - next day
             $('#timePicker').timepicker({ 'minTime': '@SD.OpenStoreHourStringEU', 'maxTime':'@SD.CloseStoreHourStringEU', 'step':'@SD.TimeIntervalTimePickerStringMinutes'});
         });
 
 
         function setPickupTime() {
             var dateSelected = document.getElementById('datePicker').value;
-            var dt = new Date(dateSelected);
+            var dt = dateInMMDDYY(dateSelected)//new Date();
             var today = new Date();
 
             dt.setHours(0, 0, 0, 0);
@@ -190,7 +190,7 @@
             if (dt>today) {
                 selectedTime = '@SD.OpenStoreHourStringEU';
             } else {
-                selectedTime = getTimeFromCurrentDate().toLocaleTimeString().slice(0,5);
+                selectedTime = getTimeFromCurrentDate().toLocaleTimeString().slice(0, 5);
             }
 
             //console.log(selectedTime);
@@ -252,6 +252,11 @@
             }
 
             return true;
+        }
+
+        function dateInMMDDYY(input) {
+            const [day, month, year] = input.split("/");
+            return new Date(year,month-1,day);
         }
 
     </script>
