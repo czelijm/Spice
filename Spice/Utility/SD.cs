@@ -33,7 +33,12 @@ namespace Spice.Utility
 		public static string CloseStoreHourStringEU = "21:00";
 		public static string TimeIntervalTimePickerStringMinutes= "30";
 
-		public static class Status 
+		public static string TransactionDataName = "Spice Restaurant";
+		public static string TransactionDataDescription = "11 Cool street, Order Charge";
+		public static string TransactionDataImage = "https://stripe.com/img/documentation/checkout/marketplace.png";
+
+
+        public static class Status 
 		{
 			public static string orderSubmitted = "Submitted";
 			public static string orderInProcess = "Being Prepared";
