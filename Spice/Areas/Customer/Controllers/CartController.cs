@@ -234,8 +234,8 @@ namespace Spice.Areas.Customer.Controllers
 
 
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index","Home");
-            //return RedirectToAction("Confirm","Order",new {id=OrderDetailsCart.OrderHeader.Id });
+            //return RedirectToAction("Index","Home");
+            return RedirectToAction("Confirm","Order",new {id=OrderDetailsCart.OrderHeader.Id });
         }
 
         public async Task<IActionResult> AddCoupon()

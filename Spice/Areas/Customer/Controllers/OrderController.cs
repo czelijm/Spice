@@ -1,21 +1,45 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Spice.Data;
+using Spice.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Spice.Areas.Customer.Controllers
 {
+    [Area("Customer")]
     public class OrderController : Controller
     {
+
+        private readonly ApplicationDbContext _db;
+
+        public OrderController(ApplicationDbContext db)
+        {
+            _db = db;
+        }
+
         //public IActionResult Index()
         //{
         //    return View();
         //}
-
+        
+        [Authorize]
         public async Task<IActionResult> Confirm(Guid id) 
         {
-            return null;
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            OrderDetailsViewModel orderDetailsViewModel = new OrderDetailsViewModel
+            {
+                OrderHeader = await _db.OrderHeader.Include(o => o.User).FirstOrDefaultAsync(o => o.Id.ToString().Equals(id.ToString())),
+                OrderDetails = await _db.OrderDetails.Where(o => o.OrderId.ToString().Equals(id.ToString())).ToListAsync()
+            };
+
+            return View(orderDetailsViewModel);
         }
 
     }
