@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Spice.Data;
 using Spice.Models.ViewModels;
+using Spice.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace Spice.Areas.Customer.Controllers
     {
 
         private readonly ApplicationDbContext _db;
+        private int PageSize = SD.PageSize;
 
         public OrderController(ApplicationDbContext db)
         {
@@ -23,14 +25,19 @@ namespace Spice.Areas.Customer.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int productPage=1)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
             if (claim == null) return NotFound();
 
-            var modelList = new List<OrderDetailsViewModel>();
+            OrderListViewModel orderListViewModel = new OrderListViewModel
+            {
+                Orders = new List<OrderDetailsViewModel>(),
+                //PagingInfo = new Models.PagingInfo()
+            };
+            //var modelList = new List<OrderDetailsViewModel>();
 
             var orderHeaderList = await _db.OrderHeader.Include(o => o.User).Where(o => o.UserId.Equals(claim.Value)).ToListAsync();
 
@@ -45,15 +52,26 @@ namespace Spice.Areas.Customer.Controllers
 
             foreach (var item in orderHeaderList)
             {
-                modelList.Add(new OrderDetailsViewModel
+                orderListViewModel.Orders.Add(new OrderDetailsViewModel
                 {
                     OrderHeader = item,
                     OrderDetails = await _db.OrderDetails.Where(o => o.OrderId.ToString().Equals(item.Id.ToString())).ToListAsync()
                 });
             }
 
+            var count = orderListViewModel.Orders.Count;
+            orderListViewModel.Orders = orderListViewModel.Orders.OrderByDescending(p=>p.OrderHeader.Id)
+                .Skip((productPage-1)*PageSize)
+                .Take(PageSize).ToList();
+            orderListViewModel.PagingInfo = new Models.PagingInfo
+            {
+                CurrentPage = productPage,
+                ItemsPerPage = PageSize,
+                TotalItems = count,
+                urlParam = "/Customer/Order/Index?productPage=:" //we'll replace ':' it the view, with the page number
+            };
 
-            return View(modelList);
+            return View(orderListViewModel);
         }
 
         [Authorize]

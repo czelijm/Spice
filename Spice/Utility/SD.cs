@@ -39,7 +39,7 @@ namespace Spice.Utility
 		public static string TransactionCurrency = "usd";
 		public static string TransactionSucceeded = "succeeded";
 
-
+		public static int PageSize = 2;
 
         public static class Status 
 		{

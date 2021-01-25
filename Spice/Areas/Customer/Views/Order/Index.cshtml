@@ -1,4 +1,5 @@
-﻿@model List<Spice.Models.ViewModels.OrderDetailsViewModel>
+﻿@model Spice.Models.ViewModels.OrderListViewModel
+@*@model List<Spice.Models.ViewModels.OrderDetailsViewModel>*@
 
 @{
     ViewData["Title"] = "Order History";
@@ -18,24 +19,24 @@
         </div>
     </div>
     <div class="">
-        @if (Model.Count() > 0)
+        @if (Model.Orders.Count() > 0)
         {
             <table class="table table-striped border">
                 <tr class="table-secondary">
                     <th>
-                        @Html.DisplayNameFor(m => m.FirstOrDefault().OrderHeader.Id)
+                        @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().OrderHeader.Id)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(m => m.FirstOrDefault().OrderHeader.PickupName)
+                        @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().OrderHeader.PickupName)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(m => m.FirstOrDefault().OrderHeader.User.Email)
+                        @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().OrderHeader.User.Email)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(m => m.FirstOrDefault().OrderHeader.PickupTime)
+                        @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().OrderHeader.PickupTime)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(m => m.FirstOrDefault().OrderHeader.OrderTotalDiscount)
+                        @Html.DisplayNameFor(m => m.Orders.FirstOrDefault().OrderHeader.OrderTotalDiscount)
                     </th>
                     <th>
                         Total items
@@ -43,7 +44,7 @@
                     @*<th></th>*@
                     <th></th>
                 </tr>
-                @foreach (var item in Model)
+                @foreach (var item in Model.Orders)
                 {
                     <tr>
                         <td class="w-25">
@@ -72,6 +73,15 @@
                     </tr>
                 }
             </table>
+            <div page-model="@Model.PagingInfo" 
+                 page-classes-enable="true" 
+                 page-class="btn border" 
+                 page-class-normal="btn btn-light" 
+                 page-class-selected="btn btn-info active"
+                 class="btn-group float-right">
+
+            </div>
+            <br />
         }
         else
         {
@@ -100,3 +110,39 @@
 </div>
 
 
+@section Scripts{ 
+    <script>
+        var postBackUrl = '/Customer/Order/GetOrderDetails';
+        $(function () {
+            $('.anchor-detail').click(function () {
+
+                //our object
+                var $buttonClicked = $(this);
+
+                //get id of button
+                var id = $buttonClicked.attr('data-id');
+
+                //ajax call to action method
+                $.ajax({
+                    type: "GET",
+                    url: postBackUrl,
+                   // contentType: "application/json; charset=utf-8",
+                    data: { "Id": id },
+                    cache: false,
+                    dataType: "html",
+                    //if success we want to call function
+                    success: function (data) {
+                        //pass data
+                        $('#myModalContent').html(data);
+                        //make wisible
+                        $('#myModal').modal('show');
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed :(");
+                    }
+                });
+
+            });
+        })
+    </script>
+}
