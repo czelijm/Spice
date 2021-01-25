@@ -1,0 +1,102 @@
+﻿@model List<Spice.Models.ViewModels.OrderDetailsViewModel>
+
+@{
+    ViewData["Title"] = "Order History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+
+<div class="border background-white">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-info">Order History</h2>
+        </div>
+        <div class="col-6 text-right">
+            @*   <a asp-action="Create" asp-controller="Category" asp-area="Admin" class="btn btn-info"><i class="fas fa-plus"></i> &nbsp; Create new category</a>*@
+            @*<partial name="_CreateButtonPartial" />*@
+        </div>
+    </div>
+    <div class="">
+        @if (Model.Count() > 0)
+        {
+            <table class="table table-striped border">
+                <tr class="table-secondary">
+                    <th>
+                        @Html.DisplayNameFor(m => m.FirstOrDefault().OrderHeader.Id)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(m => m.FirstOrDefault().OrderHeader.PickupName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(m => m.FirstOrDefault().OrderHeader.User.Email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(m => m.FirstOrDefault().OrderHeader.PickupTime)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(m => m.FirstOrDefault().OrderHeader.OrderTotalDiscount)
+                    </th>
+                    <th>
+                        Total items
+                    </th>
+                    @*<th></th>*@
+                    <th></th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="w-25">
+                            @Html.DisplayFor(m => item.OrderHeader.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.OrderHeader.PickupName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.OrderHeader.User.Email)
+                        </td>
+                        <td style="width:10%">
+                            @Html.DisplayFor(m => item.OrderHeader.PickupTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.OrderHeader.OrderTotalDiscount)
+                        </td>
+                        <td style="width:10%">
+                            @Html.DisplayFor(m => item.OrderDetails.Count)
+                        </td>
+                        <td class="">
+                            <button type="submit" class="btn btn-sm btn-success anchor-detail" asp-action="GetOrderDetails" data-Id="@item.OrderHeader.Id" data-toggle="modal">
+                                <i class="far fa-list-alt"></i> Details
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <br />
+            <p>There isn't existing categories yet :(</p>
+        }
+
+    </div>
+
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog-centered modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-light justify-content-center">
+                <h5 class="modal-title">Order Details</h5>
+            </div>
+            <div class="modal-body justify-content-center" id="myModalContent">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary w-25" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,18 @@
+﻿@model List<Spice.Models.ViewModels.OrderDetailsViewModel>
+
+@if (Model != null)
+{
+    @foreach (var item in Model)
+    {
+        <p>
+            @item.OrderHeader.PickupName
+        </p>
+    }
+}
+else
+{
+    <p>Clear history</p>
+}
+
+
+

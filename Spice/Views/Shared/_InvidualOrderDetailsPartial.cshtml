@@ -1,0 +1,114 @@
+﻿@model Spice.Models.ViewModels.OrderDetailsViewModel
+@using Spice.Utility
+
+<form method="post">
+    <div class="container row border ml-1 background-white-border-10-p" style="width:100%">
+        <div class="col-lg-8 col-12" style="border-right:1px solid #bbb9b9">
+            <br />
+            <input type="hidden" asp-for="OrderHeader.Id" />
+
+            <div class="form-group row">
+                <div class="col-3">
+                    <label>Name</label>
+                </div>
+                <div class="col-9">
+                    <input asp-for="OrderHeader.PickupName" disabled class="form-control read-only-background" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="OrderHeader.User.Email"></label>
+                </div>
+                <div class="col-9">
+                    <input asp-for="OrderHeader.User.Email" disabled class="form-control read-only-background" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="OrderHeader.User.PhoneNumber"></label>
+                </div>
+                <div class="col-9">
+                    <input asp-for="OrderHeader.User.PhoneNumber" disabled class="form-control read-only-background" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="OrderHeader.OrderTotalDiscount"></label>
+                </div>
+                <div class="col-9">
+                    <input asp-for="OrderHeader.OrderTotalDiscount" disabled class="form-control read-only-background" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="OrderHeader.OrderDate"></label>
+                </div>
+                <div class="col-9">
+                    <input value="@Model.OrderHeader.PickupTime" disabled class="form-control read-only-background" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-3">
+                    <label asp-for="OrderHeader.Comments"></label>
+                </div>
+                <div class="col-9">
+                    <input asp-for="OrderHeader.Comments" disabled class="form-control read-only-background" />
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-lg-4 col-12">
+            <div class="d-flex justify-content-between h5 mb-3 row">
+                <div class=" col-3 m-2 p-0">
+                    <span class="text-muted">Order ID:</span>
+                </div>
+                <div class="col-8 m-1 text-right p-0 mr-2">
+                    <span class="badge badge-secondary badge-pill h6"><small> @Model.OrderHeader.Id </small></span>
+                </div>
+            </div>
+            <ul class="list-group mb-3">
+                @{
+                    decimal total = 0.00M;
+                    foreach (var item in Model.OrderDetails)
+                    {
+                        <li class="list-group-item d-flex justify-content-between">
+                            <div>
+                                <h6 class="my-0">@item.Name</h6>
+                                <small class="text-muted">Quantity : @item.Count</small>
+                            </div>
+                            <span class="text-muted">@string.Format(SD.DefaultCultureInfo, "{0:c}", item.Count * decimal.Parse(item.Price))</span>
+                            @{total += item.Count * decimal.Parse(item.Price);}
+                        </li>
+                    }
+                }
+                @if (Model.OrderHeader.CouponCode != null)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div class="text-success">
+                            <h6 class="my-0">Promo Code</h6>
+                            <small class="">@Model.OrderHeader.CouponCodeDiscount</small>
+                        </div>
+
+                        <span class="text-success">@string.Format(SD.DefaultCultureInfo, "{0:c}", (decimal.Parse(Model.OrderHeader.CouponCodeDiscount) - total))</span>
+                    </li>
+                }
+
+                <li class="list-group-item d-flex justify-content-between bg-light">
+                    <small class="text-info"> Order Total (@SD.DefaultCultureInfo.NumberFormat.CurrencySymbol)</small>
+                    <span class="text-info"><strong>@string.Format(@SD.DefaultCultureInfo, "{0:c}", decimal.Parse(Model.OrderHeader.OrderTotalDiscount))</strong></span>
+                </li>
+
+            </ul>
+
+            <button type="submit" disabled class="btn btn-info form-control">@Model.OrderHeader.Status</button>
+
+        </div>
+
+    </div>
+</form>

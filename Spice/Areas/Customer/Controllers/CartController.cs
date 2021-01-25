@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Spice.Data;
@@ -293,6 +294,26 @@ namespace Spice.Areas.Customer.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        //[Authorize]
+        //public async Task<IActionResult> OrderHistory(Guid cartId) 
+        //{
+        //    var claimsIdentity = (ClaimsIdentity)User.Identity;
+        //    var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+        //    if (claim == null) return NotFound();
+
+        //    var modelList = new List<OrderDetailsViewModel>();
+        //    var orderHeaderList = await _db.OrderHeader.Include(o => o.User).Where(o => o.UserId.Equals(claim.Value)).ToListAsync();
+
+        //    foreach (var item in orderHeaderList)
+        //    {
+        //        modelList.Add(new OrderDetailsViewModel
+        //        {
+        //            OrderHeader = item,
+        //            OrderDetails = await _db.OrderDetails.Where(o => o.OrderId.ToString().Equals(item.Id.ToString())).ToListAsync()
+        //        });
+        //    }
+        //    return View(modelList);
+        //}
 
 
 

@@ -51,38 +51,48 @@
 
                         }
 
-
-                        @* Retreiving the session *@
-
-                        @{
-                            var count = HttpContextAccessor.HttpContext.Session.GetInt32(Spice.Utility.SD.SessionCartCountCookie);
-                            count ??= 0;
+                        @if (User.IsInRole(Spice.Utility.SD.ManagerUser) || User.IsInRole(Spice.Utility.SD.CustomerEndUser))
+                        {
+                            <li class="nav-item" style="color:white;">
+                                <a asp-area="Customer" asp-controller="Order" asp-action="Index" class="nav-link">
+                                    Order History
+                                </a>
+                            </li>
                         }
 
+                            @* Retreiving the session *@
 
-                        @*@if ( count != null)
-                            {
-                                <li style="color:white;">
-                                    <a href="#" class="nav-link">
-                                        <i class="fas fa-shopping-cart"></i> &nbsp; @count
-                                    </a>
-                                </li>
+                            @{
+                                var count = HttpContextAccessor.HttpContext.Session.GetInt32(Spice.Utility.SD.SessionCartCountCookie);
+                                count ??= 0;
+                            }
 
-                            }*@
 
-                        <li style="color:white;">
-                            <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="nav-link">
-                                <i class="fas fa-shopping-cart"></i> &nbsp; (@count)
-                            </a>
-                        </li>
+                            @*@if ( count != null)
+            {
+                <li style="color:white;">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-shopping-cart"></i> &nbsp; @count
+                    </a>
+                </li>
 
-                        @*<li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+            }*@
+
+                            <li style="color:white;">
+                                <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="nav-link">
+                                    <i class="fas fa-shopping-cart"></i> &nbsp; (@count)
+                                </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                            </li>*@
-                    </ul>
+
+
+
+                            @*<li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </li>*@
+                        </ul>
                 </div>
             </div>
         </nav>
