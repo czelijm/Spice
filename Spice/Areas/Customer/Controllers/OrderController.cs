@@ -103,5 +103,9 @@ namespace Spice.Areas.Customer.Controllers
             return PartialView("_InvidualOrderDetailsPartial",orderDetailsViewModel);
         }
 
+        public async Task<IActionResult> GetOrderStatusChart(string status) 
+        {
+            return PartialView("_OrderStatusChartPartialView",status);
+        }
     }
 }

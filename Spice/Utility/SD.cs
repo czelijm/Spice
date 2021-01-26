@@ -55,6 +55,25 @@ namespace Spice.Utility
 			
 		}
 
+		public static class Image
+		{
+			public static string orderPlaced = "/images/OrderPlaced.png";
+			public static string orderReadyForPickUp = "/images/ReadyForPickup.png";
+			public static string orderInKitchen = "/images/InKitchen.png";
+			public static string orderCompleted = "/images/completed.png";
+
+			public static Dictionary<String, String> Images = new Dictionary<string, string>();
+
+			static Image() 
+			{
+				Images.Add(Status.orderSubmitted, orderPlaced);
+				Images.Add(Status.orderInProcess, orderInKitchen);
+				Images.Add(Status.orderReadyForPickup, orderReadyForPickUp);
+				Images.Add(Status.orderCompleted, orderCompleted);
+			}
+			
+		}
+
 		public static string ConvertToRawHtml(string source)
 		{
 			char[] array = new char[source.Length];

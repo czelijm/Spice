@@ -1,0 +1,18 @@
+﻿@model string
+@using Spice.Utility
+
+<div class="container d-flex justify-content-center">
+    <div class="row">
+        <div>
+            @if (SD.Image.Images.ContainsKey(Model))
+            {
+                <img src=@SD.Image.Images[Model] alt=@Model />
+            }
+            else
+            {
+                <p>Status Unknow</p>
+            }
+        </div>
+
+    </div>
+</div>

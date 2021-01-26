@@ -95,7 +95,7 @@
                             <small class="">@Model.OrderHeader.CouponCodeDiscount</small>
                         </div>
 
-                        <span class="text-success">@string.Format(SD.DefaultCultureInfo, "{0:c}", (decimal.Parse(Model.OrderHeader.CouponCodeDiscount) - total))</span>
+                        <span class="text-success">@string.Format(SD.DefaultCultureInfo, "{0:c}", (decimal.Parse(Model.OrderHeader.OrderTotalDiscount) - total))</span>
                     </li>
                 }
 

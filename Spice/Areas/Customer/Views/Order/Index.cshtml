@@ -43,11 +43,14 @@
                     </th>
                     @*<th></th>*@
                     <th></th>
+
+                    <th></th>
+
                 </tr>
                 @foreach (var item in Model.Orders)
                 {
                     <tr>
-                        <td class="w-25">
+                        <td>
                             @Html.DisplayFor(m => item.OrderHeader.Id)
                         </td>
                         <td>
@@ -56,13 +59,13 @@
                         <td>
                             @Html.DisplayFor(m => item.OrderHeader.User.Email)
                         </td>
-                        <td style="width:10%">
+                        <td >
                             @Html.DisplayFor(m => item.OrderHeader.PickupTime)
                         </td>
                         <td>
                             @Html.DisplayFor(m => item.OrderHeader.OrderTotalDiscount)
                         </td>
-                        <td style="width:10%">
+                        <td >
                             @Html.DisplayFor(m => item.OrderDetails.Count)
                         </td>
                         <td class="">
@@ -70,13 +73,22 @@
                                 <i class="far fa-list-alt"></i> Details
                             </button>
                         </td>
+                        @if (@item.OrderHeader.Status != Spice.Utility.SD.Status.orderCanceled)
+                        {
+                            <td class="">
+                                <button type="submit" class="btn btn-sm btn-info anchor-detail-status" asp-action="GetOrderStatusChart" data-status="@item.OrderHeader.Status" data-toggle="modal">
+                                    <i class="far fa-clock"></i> Status
+                                </button>
+                            </td>
+
+                        }
                     </tr>
                 }
             </table>
-            <div page-model="@Model.PagingInfo" 
-                 page-classes-enable="true" 
-                 page-class="btn border" 
-                 page-class-normal="btn btn-light" 
+            <div page-model="@Model.PagingInfo"
+                 page-classes-enable="true"
+                 page-class="btn border"
+                 page-class-normal="btn btn-light"
                  page-class-selected="btn btn-info active"
                  class="btn-group float-right">
 
@@ -110,7 +122,24 @@
 </div>
 
 
-@section Scripts{ 
+<div class="modal fade" id="myModalDetails" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog-centered modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-light justify-content-center">
+                <h5 class="modal-title">Order Status</h5>
+            </div>
+            <div class="modal-body justify-content-center" id="myModalContentDetails">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary w-25" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
     <script>
         var postBackUrl = '/Customer/Order/GetOrderDetails';
         $(function () {
@@ -126,7 +155,7 @@
                 $.ajax({
                     type: "GET",
                     url: postBackUrl,
-                   // contentType: "application/json; charset=utf-8",
+                    // contentType: "application/json; charset=utf-8",
                     data: { "Id": id },
                     cache: false,
                     dataType: "html",
@@ -143,6 +172,30 @@
                 });
 
             });
-        })
+            //------Order Status Modal-------------------------------------------------------------------
+            $('.anchor-detail-status').click(function () {
+
+                var $buttonClicked = $(this);
+                var status = $buttonClicked.attr('data-status');
+
+                $.ajax({
+                    type: "GET",
+                    url: "/Customer/Order/GetOrderStatusChart",
+                    // contentType: "application/json; charset=utf-8",
+                    data: { "status": status },
+                    cache: false,
+                    dataType: "html",
+                    success: function (data) {
+                        $('#myModalContentDetails').html(data);
+                        $('#myModalDetails').modal('show');
+                    },
+                    error: function () {
+                        alert("Dynamic content load failed :(");
+                    }
+                });
+
+            });
+
+        });
     </script>
 }
