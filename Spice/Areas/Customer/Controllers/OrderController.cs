@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Spice.Areas.Customer.Controllers
@@ -73,6 +74,35 @@ namespace Spice.Areas.Customer.Controllers
 
             return View(orderListViewModel);
         }
+        
+        [Authorize(Roles = (SD.KitchenUser + "," + SD.ManagerUser))]
+        public async Task<IActionResult> ManageOrder()
+        {
+
+            IList<OrderDetailsViewModel> orderDetailsViewModelList = new List<OrderDetailsViewModel>();
+
+            //OrderListViewModel orderListViewModel = new OrderListViewModel
+            //{
+            //    Orders = new List<OrderDetailsViewModel>(),
+            //    //PagingInfo = new Models.PagingInfo()
+            //};
+
+            //var orderHeaderListTest = await _db.OrderHeader.Include(o => o.User).ToListAsync();
+            //var orderHeaderListTest2 = await _db.OrderHeader.ToListAsync();
+            var orderHeaderList = await _db.OrderHeader.Where(o => o.Status.Equals(SD.Status.orderSubmitted)|| o.Status.Equals(SD.Status.orderInProcess))
+                .OrderByDescending(o=>o.PickupTime).ToListAsync();
+
+            foreach (var item in orderHeaderList)
+            {
+                orderDetailsViewModelList.Add(new OrderDetailsViewModel
+                {
+                    OrderHeader = item,
+                    OrderDetails = await _db.OrderDetails.Where(o => o.OrderId.ToString().Equals(item.Id.ToString())).ToListAsync()
+                });
+            }
+
+            return View(orderDetailsViewModelList);
+        }
 
         [Authorize]
         public async Task<IActionResult> Confirm(Guid id) 
@@ -107,5 +137,89 @@ namespace Spice.Areas.Customer.Controllers
         {
             return PartialView("_OrderStatusChartPartialView",status);
         }
+
+        [Authorize(Roles = (SD.KitchenUser + "," + SD.ManagerUser))]
+        public async Task<IActionResult> OrderPrepare(Guid OrderId) 
+        {
+            if (OrderId == null || OrderId.Equals(Guid.Empty)) return NotFound();
+            var result = await _db.OrderHeader.FirstOrDefaultAsync(o => o.Id.ToString().Equals(OrderId.ToString()));
+            if (result == null) return NotFound();
+
+            result.Status = SD.Status.orderInProcess;
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("ManageOrder");
+        }
+
+        [Authorize(Roles = (SD.KitchenUser + "," + SD.ManagerUser))]
+        public async Task<IActionResult> OrderCancel(Guid OrderId)
+        {
+            if (OrderId == null || OrderId.Equals(Guid.Empty)) return NotFound();
+            var result = await _db.OrderHeader.FirstOrDefaultAsync(o => o.Id.ToString().Equals(OrderId.ToString()));
+            if (result == null) return NotFound();
+
+            result.Status = SD.Status.orderCanceled;
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("ManageOrder","Order");
+        }
+
+        [Authorize(Roles = (SD.KitchenUser + "," + SD.ManagerUser))]
+        public async Task<IActionResult> OrderReady(Guid OrderId)
+        {
+            if (OrderId == null || OrderId.Equals(Guid.Empty)) return NotFound();
+            var result = await _db.OrderHeader.FirstOrDefaultAsync(o => o.Id.ToString().Equals(OrderId.ToString()));
+            if (result == null) return NotFound();
+
+            result.Status = SD.Status.orderReadyForPickup;
+            await _db.SaveChangesAsync();
+
+            //Email logic
+
+            return RedirectToAction("ManageOrder", "Order");
+        }
+
+        [Authorize]
+        public async Task<IActionResult> OrderPickup(int productPage = 1)
+        {
+            //var claimsIdentity = (ClaimsIdentity)User.Identity;
+            //var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+            //if (claim == null) return NotFound();
+
+            OrderListViewModel orderListViewModel = new OrderListViewModel
+            {
+                Orders = new List<OrderDetailsViewModel>(),
+            };
+
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append("/Customer/Order/OrderPickup?productPage=:");
+
+            var orderHeaderList = await _db.OrderHeader.Include(o => o.User).Where(o => o.Status.Equals(SD.Status.orderReadyForPickup)).ToListAsync();
+
+            foreach (var item in orderHeaderList)
+            {
+                orderListViewModel.Orders.Add(new OrderDetailsViewModel
+                {
+                    OrderHeader = item,
+                    OrderDetails = await _db.OrderDetails.Where(o => o.OrderId.ToString().Equals(item.Id.ToString())).ToListAsync()
+                });
+            }
+
+            var count = orderListViewModel.Orders.Count;
+            orderListViewModel.Orders = orderListViewModel.Orders.OrderByDescending(p => p.OrderHeader.Id)
+                .Skip((productPage - 1) * PageSize)
+                .Take(PageSize).ToList();
+            orderListViewModel.PagingInfo = new Models.PagingInfo
+            {
+                CurrentPage = productPage,
+                ItemsPerPage = PageSize,
+                TotalItems = count,
+                urlParam = "/Customer/Order/Index?productPage=:" //we'll replace ':' it the view, with the page number
+            };
+
+            return View(orderListViewModel);
+        }
+
     }
 }
