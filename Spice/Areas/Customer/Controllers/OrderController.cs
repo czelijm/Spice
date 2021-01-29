@@ -1,15 +1,19 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using LinqKit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Spice.Data;
+using Spice.Models;
 using Spice.Models.ViewModels;
 using Spice.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Spice.Areas.Customer.Controllers
 {
@@ -121,14 +125,14 @@ namespace Spice.Areas.Customer.Controllers
 
         public async Task<IActionResult> GetOrderDetails(Guid Id)
         {
-            if (Id == null) return NotFound();
+            if (Id == null || Id.Equals(Guid.Empty)) return NotFound();
 
             OrderDetailsViewModel orderDetailsViewModel = new OrderDetailsViewModel
             {
-                OrderHeader = await _db.OrderHeader.FirstOrDefaultAsync(o => o.Id.ToString().Equals(Id.ToString())),
+                OrderHeader = await _db.OrderHeader.FirstAsync(o => o.Id.ToString().Equals(Id.ToString())),
                 OrderDetails = await _db.OrderDetails.Where(o => o.OrderId.ToString().Equals(Id.ToString())).ToListAsync()
             };
-            orderDetailsViewModel.OrderHeader.User = await _db.ApplicationUser.FirstOrDefaultAsync(u=>u.Id.Equals(orderDetailsViewModel.OrderHeader.UserId));
+            orderDetailsViewModel.OrderHeader.User = await _db.ApplicationUser.FirstAsync(u=>u.Id.Equals(orderDetailsViewModel.OrderHeader.UserId));
 
             return PartialView("_InvidualOrderDetailsPartial",orderDetailsViewModel);
         }
@@ -157,7 +161,7 @@ namespace Spice.Areas.Customer.Controllers
             if (OrderId == null || OrderId.Equals(Guid.Empty)) return NotFound();
             var result = await _db.OrderHeader.FirstOrDefaultAsync(o => o.Id.ToString().Equals(OrderId.ToString()));
             if (result == null) return NotFound();
-
+            
             result.Status = SD.Status.orderCanceled;
             await _db.SaveChangesAsync();
 
@@ -180,7 +184,7 @@ namespace Spice.Areas.Customer.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> OrderPickup(int productPage = 1)
+        public async Task<IActionResult> OrderPickup(int productPage = 1, string searchEmail=null, string searchName = null, string searchPhone = null)
         {
             //var claimsIdentity = (ClaimsIdentity)User.Identity;
             //var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
@@ -192,10 +196,52 @@ namespace Spice.Areas.Customer.Controllers
                 Orders = new List<OrderDetailsViewModel>(),
             };
 
+            //stack of querries for linq statement
+            //Stack<Func<OrderHeader, bool>> linqConditionsStack = new Stack<Func<OrderHeader, bool>>();
+
+
+
+            var predicateBuilder = PredicateBuilder.New<OrderHeader>(true);
+            predicateBuilder.Start(o => o.Status.Equals(SD.Status.orderReadyForPickup));
+
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("/Customer/Order/OrderPickup?productPage=:");
+            stringBuilder.Append("&searchEmail=");
+            if (searchEmail!=null)
+            {
+                stringBuilder.Append(searchEmail);
+                predicateBuilder.And(o => o.User.Email.ToLower().Equals(searchEmail.ToLower()));
 
-            var orderHeaderList = await _db.OrderHeader.Include(o => o.User).Where(o => o.Status.Equals(SD.Status.orderReadyForPickup)).ToListAsync();
+                //add condition to check
+                //linqConditionsStack.Push(new Func<OrderHeader, bool>(o => o.User.Email.ToLower().Equals(searchEmail)));
+            }
+            stringBuilder.Append("&searchName=");
+            if (searchName != null)
+            {
+                stringBuilder.Append(searchName);
+                predicateBuilder.And(o => o.PickupName.ToLower().Equals(searchName.ToLower()));
+                //linqConditionsStack.Push(new Func<OrderHeader, bool>(o => o.PickupName.ToLower().Equals(searchName)));
+            }
+            stringBuilder.Append("&searchPhone=");
+            if (searchPhone != null)
+            {
+                stringBuilder.Append(searchPhone);
+                predicateBuilder.And(o => o.PhoneNumber.Equals(searchPhone));
+                //linqConditionsStack.Push(new Func<OrderHeader, bool>(o => o.User.Email.ToLower().Equals(searchPhone)));
+            }
+
+            //var predicateCompiled = predicateBuilder.Compile();
+
+            //List<OrderHeader> orderHeaderList = null;
+            var orderHeaderList = await _db.OrderHeader.Include(o => o.User).Where(predicateBuilder).ToListAsync();
+
+            //while (linqConditionsStack.Count>0)
+            //{
+            //    orderHeaderList = orderHeaderList.Where(linqConditionsStack.Pop()).ToList();
+            //}
+
+
+            //var orderHeaderList = await _db.OrderHeader.Include(o => o.User).Where(o => o.Status.Equals(SD.Status.orderReadyForPickup)).ToListAsync();
 
             foreach (var item in orderHeaderList)
             {
@@ -215,7 +261,7 @@ namespace Spice.Areas.Customer.Controllers
                 CurrentPage = productPage,
                 ItemsPerPage = PageSize,
                 TotalItems = count,
-                urlParam = "/Customer/Order/Index?productPage=:" //we'll replace ':' it the view, with the page number
+                urlParam = stringBuilder.ToString() //we'll replace ':' it the view, with the page number
             };
 
             return View(orderListViewModel);
