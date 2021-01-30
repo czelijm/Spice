@@ -18,6 +18,10 @@ namespace Spice
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((ctx,bld)=> 
+                {
+                    bld.AddJsonFile("apikeys.json");
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
