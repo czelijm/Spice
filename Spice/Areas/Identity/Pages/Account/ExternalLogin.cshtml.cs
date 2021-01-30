@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Spice.Models;
+using Spice.Utility;
 
 namespace Spice.Areas.Identity.Pages.Account
 {
@@ -23,18 +25,24 @@ namespace Spice.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public ExternalLoginModel(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
+
+
+
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -51,6 +59,16 @@ namespace Spice.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
+
+            [Required]
+            public string FirstName { get; set; }
+            [Required]
+            public string LastName { get; set; }
+            public string StreetAddres { get; set; }
+            public string PhoneNumber { get; set; }
+            public string City { get; set; }
+            public string PostalCode { get; set; }
+            public string State { get; set; }
         }
 
         public IActionResult OnGetAsync()
@@ -101,7 +119,10 @@ namespace Spice.Areas.Identity.Pages.Account
                 {
                     Input = new InputModel
                     {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                        Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                        FirstName = info.Principal.FindFirstValue(ClaimTypes.Name).Split(" ")[0],
+                        LastName = info.Principal.FindFirstValue(ClaimTypes.Name).Split(" ")[1],
+
                     };
                 }
                 return Page();
@@ -121,11 +142,26 @@ namespace Spice.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                //change IndentityUser -> AppictaionUser ; add properties
+                var user = new ApplicationUser 
+                {
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    City = Input.City,
+                    PostalCode = Input.PostalCode,
+                    StreetAddres = Input.StreetAddres,
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    PhoneNumber = Input.PhoneNumber,
+                    State = Input.State
+                };
 
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
+                    //Add role to user
+                    await _userManager.AddToRoleAsync(user, SD.CustomerEndUser);
+
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
