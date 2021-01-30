@@ -9,7 +9,7 @@
 <br />
 <h2 class="text-info">Orders Ready for Pickup :</h2>
 
-<form method="post">
+<form method="get">
     <div class="border background-white">
         <div class="container border border-secondary w-100">
             <div class="row container">
@@ -114,30 +114,31 @@
 
     </div>
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog-centered modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-light">
-                    <div class="col-10 offset-1">
-                        <center><h5 class="modal-title">Order Details</h5></center>
-                    </div>
-                    <div class="col-1">
-                        <button type="button" class="float-right btn btn-secondary close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="modal-body justify-content-center" id="myModalContent">
+</form>
 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog-centered modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-light">
+                <div class="col-10 offset-1">
+                    <center><h5 class="modal-title">Order Details</h5></center>
                 </div>
-                <!--<div class="modal-footer">-->
-                    @*<button type="button" class="btn btn-secondary w-25" data-dismiss="modal">Close</button>*@
-                <!--</div>-->
+                <div class="col-1">
+                    <button type="button" class="float-right btn btn-secondary close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
             </div>
+            <div class="modal-body justify-content-center" id="myModalContent">
+
+            </div>
+            <!--<div class="modal-footer">-->
+                @*<button type="button" class="btn btn-secondary w-25" data-dismiss="modal">Close</button>*@
+            <!--</div>-->
         </div>
     </div>
+</div>
 
-</form>
 
 @section Scripts{
     <script>

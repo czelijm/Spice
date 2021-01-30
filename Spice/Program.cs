@@ -18,6 +18,7 @@ namespace Spice
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                //added additional files with api keys that is ignored in github commits
                 .ConfigureAppConfiguration((ctx,bld)=> 
                 {
                     bld.AddJsonFile("apikeys.json");

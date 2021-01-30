@@ -267,5 +267,21 @@ namespace Spice.Areas.Customer.Controllers
             return View(orderListViewModel);
         }
 
+
+        [Authorize(Roles = (SD.ManagerUser + "," + SD.FrontDeskUser))]
+        [HttpPost]
+        //[AutoValidateAntiforgeryToken]
+        [ActionName("OrderPickup")]
+        public async Task<IActionResult> OrderPickupPost(Guid orderId) 
+        {
+            if (orderId == null || orderId.Equals(Guid.Empty)) return NotFound();
+            var result = await _db.OrderHeader.FirstOrDefaultAsync(o => o.Id.ToString().Equals(orderId.ToString()));
+            if (result == null) return NotFound();
+
+            result.Status = SD.Status.orderCompleted;
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("OrderPickup", "Order");
+        }
     }
 }
