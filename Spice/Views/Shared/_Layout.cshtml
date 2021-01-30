@@ -68,9 +68,11 @@
                                     }
                                 </div>
                             </li>
+
+
                         }
 
-                        @if (User.IsInRole(Spice.Utility.SD.ManagerUser) || User.IsInRole(Spice.Utility.SD.CustomerEndUser))
+                        @if (User.IsInRole(Spice.Utility.SD.ManagerUser) || User.IsInRole(Spice.Utility.SD.FrontDeskUser) || User.IsInRole(Spice.Utility.SD.CustomerEndUser) || User.IsInRole(Spice.Utility.SD.KitchenUser))
                         {
                             <li class="nav-item" style="color:white;">
                                 <a asp-area="Customer" asp-controller="Order" asp-action="Index" class="nav-link">
