@@ -74,6 +74,13 @@ namespace Spice.Utility
 			
 		}
 
+        public static class CompanyInformations
+        {
+			public static string adminEmail = "admin@spice.com";
+			public static string Name = "Spice Restaurant";
+
+		}
+
 		public static string ConvertToRawHtml(string source)
 		{
 			char[] array = new char[source.Length];
