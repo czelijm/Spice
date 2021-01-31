@@ -42,10 +42,14 @@ namespace Spice
                 .AddDefaultTokenProviders() // if someone forgot password
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            //if classes have got this same name we dont need the section
+            //if members of classes has got this same as the json's section members name we don't have to add additional settings
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
-
-            // fixing Register/Rogin error by Bhurgel
+            // fixing Register/Login error by Bhurgel
+            //add singleton, emailsender only one instance, we don't have to initialize/configure it again
             services.AddSingleton<IEmailSender, EmailSender>();
+            services.Configure<EmailOptions>(Configuration.GetSection("SendGrip"));
+
 
             //for logIn logOut redirection
             services.ConfigureApplicationCookie(options=> 
