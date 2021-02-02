@@ -14,8 +14,9 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/customStyle.css" />
     <link rel="stylesheet" href="~/css/jquery-ui.min.css" />
+    @*<link rel="stylesheet" href="~/css/jquery-ui.css" />*@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.13.16/jquery.timepicker.min.css" integrity="sha512-GgUcFJ5lgRdt/8m5A0d0qEnsoi8cDoF0d6q+RirBPtL423Qsj5cI9OxQ5hWvPi5jjvTLM/YhaaFuIeWCLi6lyQ==" crossorigin="anonymous" />
-   @* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ==" crossorigin="anonymous" />*@
+  
 </head>
 <body class="search-background">
     <header>
@@ -153,21 +154,16 @@
             &copy; 2021 - Spice
         </div>
     </footer>
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js" integrity="sha512-WNLxfP/8cVYL9sj8Jnp6et0BkubLP31jhTG9vhL/F5uEZmg5wEzKoXp1kJslzPQWwPT1eyMiSxlKCgzHLOTOTQ==" crossorigin="anonymous"></script>*@
     <script src="https://cdn.tiny.cloud/1/536ltgz7me4h1ba41m9zq06sckw3r7l2klyzpeo2uh8ste7u/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/jquery-ui.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js" integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+ynfLhL15Sv2al5A0LVyDCmtUw==" crossorigin="anonymous"></script>*@
-    <script src="~/js/warningCoockieScript.js"></script>
-    @*<script>
-            $(document).ready(function () {
-                $('.toast').toast('show');
-            });
-        </script>*@
-    @*<script>
-            $('.toast').toast('show');
-    </script>*@
+    @*Must be here because the bootstrap internal toast script is crashing,*@
     @RenderSection("Scripts", required: false)
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/warningCoockieScript.js" asp-append-version="true"></script>
+    <script src="~/js/jquery-ui.min.js"></script>
+    @*<script src="~/js/jquery-ui.js"></script>*@
+    @* <script src="~/js/site.js" asp-append-version="true"></script>*@
+
 </body>
 </html>

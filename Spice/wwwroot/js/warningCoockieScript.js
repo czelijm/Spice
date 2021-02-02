@@ -1,5 +1,6 @@
 ﻿const coockieName = 'allowCookies';
 
+
 function setCookie(name, value, days) {
     var expires = "";
     if (days) {
@@ -8,7 +9,7 @@ function setCookie(name, value, days) {
         expires = "; expires=" + date.toUTCString();
     }
     document.cookie = name + "=" + (value || "") + expires + "; path=/";
-}
+};
 function getCookie(name) {
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
@@ -18,33 +19,37 @@ function getCookie(name) {
         if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
     }
     return null;
-}
+};
 
 function eraseCookie(name) {
     document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-}
+};
 
 function cookieConsent() {
+    //$('#toastAllowCockie').toast({ animation: false, delay: 2000 });
     if (!getCookie(coockieName)) {
         $('#toastAllowCockie').toast('show');
-    }
-}
+    };
+};
+
+
+cookieConsent();
 
 $('#btnDeny').click(() => {
     eraseCookie(coockieName);
-    //$('#toastAllowCockie').toast('hide')(jQuery);   
-    jQuery('#toastAllowCockie').css('visibility', 'hidden');
+    $('#toastAllowCockie').toast('hide');   
+    //jQuery('#toastAllowCockie').css('visibility', 'hidden');
+    //$('#toastAllowCockie').css('visibility', 'hidden');   
 
-})
+});
 
-$('#btnAccept').click(function($) {
+$('#btnAccept').click(function () {
     setCookie(coockieName, '1', 7);
-    //$('#toastAllowCockie').toast('hide');
-    jQuery('#toastAllowCockie').css('visibility', 'hidden');
-})
+    jQuery('#toastAllowCockie').toast('hide');
+    //jQuery('#toastAllowCockie').css('visibility', 'hidden');
+});
 
 // load
-cookieConsent();
 
 
 
