@@ -94,6 +94,7 @@ namespace Spice
             app.UseRouting();
 
             StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
+            SD.CompanyInformations.emailAdmin = Configuration.GetSection("SendGrip")["EmailCompany"];
 
             app.UseAuthentication();
             app.UseAuthorization();

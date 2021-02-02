@@ -29,10 +29,12 @@ namespace Spice.Services
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage() 
             {
-                From = new EmailAddress(SD.CompanyInformations.adminEmail, SD.CompanyInformations.Name),
+                From = new EmailAddress(SD.CompanyInformations.emailAdmin, SD.CompanyInformations.Name), //OK, but show email from
                 Subject = subject,
                 PlainTextContent = message,
-                HtmlContent = message
+                HtmlContent = message,
+                ReplyTo= new EmailAddress("no-reply@Spice.com", SD.CompanyInformations.Name),
+                
             };
 
             //address we want to send to
@@ -40,6 +42,7 @@ namespace Spice.Services
             //send email
             try
             {
+                //var response = await client.SendEmailAsync(msg);
                 return client.SendEmailAsync(msg);
             }
             catch (Exception ex)

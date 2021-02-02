@@ -22,6 +22,7 @@ namespace Spice.Utility
         //public static string SessionCountCookie = "ssCount";
         public static string SessionCartCountCookie = "ssCartCount";
         public static string SessionCouponCodeCookie = "ssCouponCode";
+        public static string SessionAllowCookie = "0";
 
 
 		public static string DefaultCultureTag = "en-US";
@@ -76,8 +77,11 @@ namespace Spice.Utility
 
         public static class CompanyInformations
         {
-			public static string adminEmail = "admin@spice.com";
+			//public static string emailAdmin = "admin@spice.com";
+			public static string emailAdmin = "";
 			public static string Name = "Spice Restaurant";
+			public static string emailSubject = "Spice - Order Created ";
+			public static string emailMessageOrderSubmitedSuccess = "Order has been submited to successfully";
 
 		}
 
