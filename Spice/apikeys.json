@@ -1,0 +1,23 @@
+{
+  "Stripe": {
+    "SecretKey": "sk_test_51IC9HWE0ekSlhYUhlEmAm46ozFPbzIFGl0cA7i0T1NSyLxPPgiA4uoxb911djYNcHXsC8qBHADcix3pxGUkMnFE300g9plBgxw",
+    "PublishableKey": "pk_test_51IC9HWE0ekSlhYUhyZ0Pfx5Hv83FlKuxOCPV1JmxJ51Ha5P1D9EtUndVoQHfQpWVoCCE6TX6bPiwVa403HwLSTj600oLT0opXs"
+  },
+  "Facebook": {
+    "AppId": "527888031497313",
+    "AppSecret": "5349e5f7f6535aa1072f6e2ba48399aa"
+  },
+  "SendGrip": {
+    "ApiKey": "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",
+    "EmailCompany": "marekczelij1@gmail.com"
+  },
+  "AdminAccountInfo": {
+    "UserName": "Admin@Spice.com",
+    "Email": "marekczelij1@gmail.com",
+    "EmailConfirmed": "true",
+    "Name": "Admin Citizen",
+    "Phone": "7777777778",
+    "Password": "<VEry.STRong.PASSword101!XD>"
+  }
+
+}
