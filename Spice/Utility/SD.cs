@@ -75,7 +75,17 @@ namespace Spice.Utility
 			
 		}
 
-        public static class CompanyInformations
+		public static class AdminAccountInfo 
+		{
+			public static string UserName = "Admin";
+			public static string Name = "Admin Citizen";
+			public static string Email = "";
+			public static bool EmailConfirmed = true;
+			public static string Phone = "";
+			public static string Password = "";
+		}
+
+		public static class CompanyInformations
         {
 			//public static string emailAdmin = "admin@spice.com";
 			public static string emailAdmin = "";

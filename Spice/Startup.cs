@@ -42,6 +42,9 @@ namespace Spice
                 .AddDefaultTokenProviders() // if someone forgot password
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            //Add dbInitializer to scope, we'll run initialize() in Configure()
+            services.AddScoped<IDbInitializer, DbInitializer>();
+
             //if classes have got this same name we dont need the section
             //if members of classes has got this same as the json's section members name we don't have to add additional settings
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
@@ -75,7 +78,7 @@ namespace Spice
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -94,7 +97,17 @@ namespace Spice
             app.UseRouting();
 
             StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
+            
             SD.CompanyInformations.emailAdmin = Configuration.GetSection("SendGrip")["EmailCompany"];
+
+            SD.AdminAccountInfo.UserName = Configuration.GetSection("AdminAccountInfo")["UserName"];
+            SD.AdminAccountInfo.Name = Configuration.GetSection("AdminAccountInfo")["Name"];
+            SD.AdminAccountInfo.Email = Configuration.GetSection("AdminAccountInfo")["Email"];
+            SD.AdminAccountInfo.EmailConfirmed = bool.Parse(Configuration.GetSection("AdminAccountInfo")["EmailConfirmed"]);
+            SD.AdminAccountInfo.Phone = Configuration.GetSection("AdminAccountInfo")["Phone"];
+            SD.AdminAccountInfo.Password = Configuration.GetSection("AdminAccountInfo")["Password"];
+            dbInitializer.Initialize();
+
 
             app.UseAuthentication();
             app.UseAuthorization();
