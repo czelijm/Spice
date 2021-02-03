@@ -1,5 +1,6 @@
 ﻿using LinqKit;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Spice.Data;
@@ -20,13 +21,14 @@ namespace Spice.Areas.Customer.Controllers
     [Area("Customer")]
     public class OrderController : Controller
     {
-
+        private readonly IEmailSender _emailSender;
         private readonly ApplicationDbContext _db;
         private int PageSize = SD.PageSize;
 
-        public OrderController(ApplicationDbContext db)
+        public OrderController(ApplicationDbContext db, IEmailSender emailSender)
         {
             _db = db;
+            _emailSender = emailSender;
         }
 
         [Authorize]
@@ -152,6 +154,13 @@ namespace Spice.Areas.Customer.Controllers
             result.Status = SD.Status.orderInProcess;
             await _db.SaveChangesAsync();
 
+            var emailFromDb = (await _db.Users.Where(u => u.Id.Equals(result.UserId)).FirstOrDefaultAsync()).Email;
+            await _emailSender.SendEmailAsync(
+                emailFromDb,
+                SD.CompanyInformations.emailSubjectStatusUpdated + OrderId.ToString() + result.Status,
+                SD.CompanyInformations.emailMessageOrderStatutsUpdatedGeneric + result.Status
+            );
+
             return RedirectToAction("ManageOrder");
         }
 
@@ -164,6 +173,13 @@ namespace Spice.Areas.Customer.Controllers
             
             result.Status = SD.Status.orderCanceled;
             await _db.SaveChangesAsync();
+
+            var emailFromDb = (await _db.Users.Where(u => u.Id.Equals(result.UserId)).FirstOrDefaultAsync()).Email;
+            await _emailSender.SendEmailAsync(
+                emailFromDb,
+                SD.CompanyInformations.emailSubjectStatusUpdated + OrderId.ToString() + result.Status,
+                SD.CompanyInformations.emailMessageOrderStatutsUpdatedGeneric + result.Status
+            );
 
             return RedirectToAction("ManageOrder","Order");
         }
@@ -179,6 +195,12 @@ namespace Spice.Areas.Customer.Controllers
             await _db.SaveChangesAsync();
 
             //Email logic
+            var emailFromDb = (await _db.Users.Where(u => u.Id.Equals(result.UserId)).FirstOrDefaultAsync()).Email;
+            await _emailSender.SendEmailAsync(
+                emailFromDb,
+                SD.CompanyInformations.emailSubjectStatusUpdated + OrderId.ToString() + result.Status,
+                SD.CompanyInformations.emailMessageOrderStatutsUpdatedGeneric + result.Status
+            );
 
             return RedirectToAction("ManageOrder", "Order");
         }
@@ -280,6 +302,13 @@ namespace Spice.Areas.Customer.Controllers
 
             result.Status = SD.Status.orderCompleted;
             await _db.SaveChangesAsync();
+
+            var emailFromDb = (await _db.Users.Where(u => u.Id.Equals(result.UserId)).FirstOrDefaultAsync()).Email;
+            await _emailSender.SendEmailAsync(
+                emailFromDb,
+                SD.CompanyInformations.emailSubjectStatusUpdated + orderId.ToString() + result.Status,
+                SD.CompanyInformations.emailMessageOrderStatutsUpdatedGeneric + result.Status
+            );
 
             return RedirectToAction("OrderPickup", "Order");
         }

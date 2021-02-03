@@ -81,7 +81,9 @@ namespace Spice.Utility
 			public static string emailAdmin = "";
 			public static string Name = "Spice Restaurant";
 			public static string emailSubject = "Spice - Order Created ";
+			public static string emailSubjectStatusUpdated = "Spice - Order status updated ";
 			public static string emailMessageOrderSubmitedSuccess = "Order has been submited to successfully";
+			public static string emailMessageOrderStatutsUpdatedGeneric = "Order status updated, status: ";
 
 		}
 
