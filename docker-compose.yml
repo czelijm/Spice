@@ -11,7 +11,7 @@ services:
         - DB_PORT=1433
         - DB_DATA_BASE=Spice
         - DB_USER=SA
-        - DB_PASSWORD=xd
+        - DB_PASSWORD=<YourStrong!Passw0rd>
         - DB_INTEGRATED_SECURITY=False
         - DB_PERSIST_SECURITY=False
 #   ports:
@@ -23,7 +23,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
         - ACCEPT_EULA=Y
-        - SA_PASSWORD=xd
+        - SA_PASSWORD=<YourStrong!Passw0rd>
         - MSSQL_PID=Express
     ports:
         - 1433:1433
