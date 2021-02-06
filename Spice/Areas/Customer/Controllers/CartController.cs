@@ -32,6 +32,7 @@ namespace Spice.Areas.Customer.Controllers
             //OrderDetailsCart = new OrderDetailsCartViewModel();
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             OrderDetailsCart = new OrderDetailsCartViewModel()

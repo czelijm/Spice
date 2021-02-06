@@ -31,9 +31,32 @@ namespace Spice
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            ////connectionString form appsetting.json //OK!
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(
+            //        Configuration.GetConnectionString("DefaultConnection")));
+
+
+            var dbServerName = Environment.GetEnvironmentVariable("DB_SERVER") ?? "localhost";
+            var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "1401";
+            var dataBase = Environment.GetEnvironmentVariable("DB_DATA_BASE") ?? "Spice";
+            var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "SA";
+            var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "<YourStrong!Passw0rd>";
+            var dbItegratedSecurity = Environment.GetEnvironmentVariable("DB_INTEGRATED_SECURITY") ?? "False";
+            var dbPersistSecurityInfo = Environment.GetEnvironmentVariable("DB_PERSIST_SECURITY") ?? "False";
+
+            //ExtraSpaceNeeded??!!
+            //Environment.GetEnvironmentVariable("NAME_OF_VARIABLE ");
+
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    options.UseSqlServer
+                    (
+                        $"Server={dbServerName},{dbPort};Database={dataBase};Integrated Security={dbItegratedSecurity};Persist Security Info={dbPersistSecurityInfo};" +
+                        $"User ID={dbUser};Password={dbPassword}"
+                    )
+
+                );
+
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //to add role to user we have to use AddIdentity
             //services.AddScoped<IEmailSender, EmailSender>();
@@ -55,7 +78,7 @@ namespace Spice
 
 
             //for logIn logOut redirection
-            services.ConfigureApplicationCookie(options=> 
+            services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = $"/Identity/Account/Login";
                 options.LogoutPath = $"/Identity/Account/Logout";

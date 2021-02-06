@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  spice:
+    image: ${DOCKER_REGISTRY-}spice
+    build:
+      context: .
+      dockerfile: Spice/Dockerfile
+    environment:
+        - DB_SERVER=db
+        - DB_PORT=1433
+        - DB_DATA_BASE=Spice
+        - DB_USER=SA
+        - DB_PASSWORD=xd
+        - DB_INTEGRATED_SECURITY=False
+        - DB_PERSIST_SECURITY=False
+#   ports:
+#        - 8080:80
+#        - 8081:443
+    depends_on: 
+        - db
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=xd
+        - MSSQL_PID=Express
+    ports:
+        - 1433:1433

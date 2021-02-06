@@ -91,7 +91,7 @@ namespace Spice.Areas.Identity.Pages.Account
                 {
 
                     var user = await _db.Users.Where(u => u.Email.Equals(Input.Email)).FirstOrDefaultAsync();
-                    List<ShoppingCart> shoppingCartItemList = await _db.ShoppingCart.Where(s => s.ApplicationUserId.ToString().Equals(user.Id.ToString())).ToListAsync();
+                    List<ShoppingCart> shoppingCartItemList = user is null? new List<ShoppingCart>() : await _db.ShoppingCart.Where(s => s.ApplicationUserId.ToString().Equals(user.Id.ToString())).ToListAsync();
 
                     //set number of type items in Cart
                     HttpContext.Session.SetInt32(Spice.Utility.SD.SessionCartCountCookie, shoppingCartItemList.Count);
