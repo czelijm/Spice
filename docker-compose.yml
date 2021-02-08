@@ -1,16 +1,19 @@
-version: '3.4'
+version: '3.9'
 
 services:
   db: 
-    image: mcr.microsoft.com/mssql/server
+    restart: on-failure
+    image: mcr.microsoft.com/mssql/server:2019-CU8-ubuntu-16.04
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=<YourStrong!Passw0rd>
       - MSSQL_PID=Express
     ports: 
       - 1433:1433
+
   spice:
     image: ${DOCKER_REGISTRY-}spice
+    restart: always
     build:
       context: .
       dockerfile: Spice/Dockerfile
