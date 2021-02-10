@@ -97,6 +97,13 @@ namespace Spice.Utility
 
 		}
 
+		public static class DBProvier 
+		{
+			public const string postgres = "postgres";
+			public const string sqlServer = "sqlserver";
+		}
+
+
 		public static string ConvertToRawHtml(string source)
 		{
 			char[] array = new char[source.Length];

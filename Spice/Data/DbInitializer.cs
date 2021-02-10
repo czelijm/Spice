@@ -27,11 +27,13 @@ namespace Spice.Data
             //instead of await and async method we can add ACTION_ASYNC.GetAwaiter().GetResult()
 
             //If there any panding Migrations then apply them
+            var x = await _db.Database.CanConnectAsync();
             try
             {
+                var x1 = _db.Database.GetPendingMigrationsAsync().GetAwaiter().GetResult().Count();
                 if (_db.Database.GetPendingMigrationsAsync().GetAwaiter().GetResult().Count() > 0) 
                 {
-                    _db.Database.Migrate();
+                    await _db.Database.MigrateAsync();
                 }
             }
             catch (Exception ex)

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Npgsql.Logging;
 using Spice.Data;
 using Spice.Services;
 using Spice.Utility;
@@ -37,10 +38,11 @@ namespace Spice
             //        Configuration.GetConnectionString("DefaultConnection")));
 
 
+            var dbProvider = Environment.GetEnvironmentVariable("DB_PROVIDER") ?? SD.DBProvier.postgres;
             var dbServerName = Environment.GetEnvironmentVariable("DB_SERVER") ?? "localhost";
-            var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "1401";
+            var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
             var dataBase = Environment.GetEnvironmentVariable("DB_DATA_BASE") ?? "Spice";
-            var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "SA";
+            var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "postgres";
             var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "<YourStrong!Passw0rd>";
             var dbItegratedSecurity = Environment.GetEnvironmentVariable("DB_INTEGRATED_SECURITY") ?? "False";
             var dbPersistSecurityInfo = Environment.GetEnvironmentVariable("DB_PERSIST_SECURITY") ?? "False";
@@ -48,14 +50,64 @@ namespace Spice
             //ExtraSpaceNeeded??!!
             //Environment.GetEnvironmentVariable("NAME_OF_VARIABLE ");
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer
+            //initialize context depend on db provider
+            //switch (dbProvider.ToLower()) 
+            //{  
+            //    case SD.DBProvier.sqlServer:
+            //    {
+            //        services.AddDbContext<ApplicationDbContext>(options =>
+            //            options.UseNpgsql
+            //            (
+            //                $"Server={dbServerName},{dbPort};Database={dataBase};Integrated Security={dbItegratedSecurity};Persist Security Info={dbPersistSecurityInfo};" +
+            //                $"User ID={dbUser};Password={dbPassword}"
+            //            )
+            //        );
+            //    }
+            //        break;
+
+            //    case SD.DBProvier.postgres:
+            //    {
+            //        services.AddDbContext<ApplicationDbContext>(options =>
+            //            options.UseNpgsql
+            //            (
+            //                $"Server={dbServerName},{dbPort};Database={dataBase};Integrated Security={dbItegratedSecurity};Persist Security Info={dbPersistSecurityInfo};" +
+            //                $"User ID={dbUser};Password={dbPassword}"
+            //            )
+            //        );
+
+            //    }
+            //        break;
+
+            //    default:
+            //    {
+            //        throw new Exception($"Database provider not recognized:{dbProvider}"); 
+            //    }
+            //        //break;
+            //}
+
+
+            //new case switch syntax
+            services.AddDbContext<ApplicationDbContext>(options => _  = dbProvider.ToLower() switch
+                {
+                    SD.DBProvier.sqlServer => options.UseSqlServer
                     (
                         $"Server={dbServerName},{dbPort};Database={dataBase};Integrated Security={dbItegratedSecurity};Persist Security Info={dbPersistSecurityInfo};" +
                         $"User ID={dbUser};Password={dbPassword}"
-                    )
+                    ),
 
-                );
+                    //the postres's connection string uses diffrent keywords than sqlServer's connection string 
+                    SD.DBProvier.postgres => options.UseNpgsql
+                    (
+                        $"Host={dbServerName};Port={dbPort};Database={dataBase};" +
+                        $"User ID={dbUser};Password={dbPassword}"
+                    ),
+
+                    _ => throw new Exception($"Database provider not recognized:{dbProvider}"),
+                }
+            );
+
+            //NpgsqlLogManager.Provider = new ConsoleLoggingProvider();
+
 
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //to add role to user we have to use AddIdentity

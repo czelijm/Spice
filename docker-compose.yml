@@ -3,13 +3,15 @@ version: '3.9'
 services:
   db: 
     restart: on-failure
-    image: mcr.microsoft.com/mssql/server:2019-CU8-ubuntu-16.04
+    image: postgres
+#    networks:
+#        frontend:
+#            ipv4_address: 172.20.0.3
     environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=<YourStrong!Passw0rd>
-      - MSSQL_PID=Express
+      - POSTGRES_PASSWORD=<YourStrong!Passw0rd>
+      - POSTGRES_USER=postgres
     ports: 
-      - 1433:1433
+      - 5432:5432
 
   spice:
     image: ${DOCKER_REGISTRY-}spice
@@ -17,16 +19,27 @@ services:
     build:
       context: .
       dockerfile: Spice/Dockerfile
+#    networks:
+#        frontend:
+#            ipv4_address: 172.20.0.2
     environment:
+      - DB_PROVIDER=postgres
       - DB_SERVER=db
-      - DB_PORT=1433
+#      - DB_SERVER=172.20.0.3
+      - DB_PORT=5432
       - DB_DATA_BASE=Spice
-      - DB_USER=SA
+      - DB_USER=postgres
       - DB_PASSWORD=<YourStrong!Passw0rd>
       - DB_INTEGRATED_SECURITY=False
       - DB_PERSIST_SECURITY=False
     depends_on:
       - db
+
+#networks:
+#  frontend:
+#    ipam:
+#        config:
+#            - subnet: 172.20.0.0/24
 #   ports:
 #        - 8080:80
 #        - 8081:443
