@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Spice.Utility
@@ -11,7 +12,7 @@ namespace Spice.Utility
     {
         public static string DefaultFoodImage = "default_food.png";
         
-        public static string ImageDefaulInnerPath = @"images\"; //@ for verbatim mode
+        public static string ImageDefaulInnerPath = @"images"+FileSeparator(); //@ for verbatim mode
 
         public const string ManagerUser = "Manager";
         public const string KitchenUser = "Kitchen";
@@ -106,6 +107,15 @@ namespace Spice.Utility
 		}
 
 
+		public static bool IsWindows()
+		{
+			return System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+		}
+
+		public static string FileSeparator()
+		{
+			return IsWindows() ? @"\" : @"/" ;
+		}
 
 		public static string ConvertToRawHtml(string source)
 		{

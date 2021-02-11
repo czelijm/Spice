@@ -28,14 +28,14 @@ namespace Spice.Data
 
 
 
-            var x = _db.Database.GetPendingMigrationsAsync().GetAwaiter().GetResult().Count();
+            //var x = _db.Database.GetPendingMigrationsAsync().GetAwaiter().GetResult().Count();
             //If there any panding Migrations then apply them
             try
             {
                 //var canDbConnect = await _db.Database.CanConnectAsync();
                 //if db doesn't exist, create it
                 //var isDbNewlyCreated = await _db.Database.EnsureCreatedAsync();
-                var x1 = _db.Database.GetPendingMigrationsAsync().GetAwaiter().GetResult().Count();
+                //var x1 = _db.Database.GetPendingMigrationsAsync().GetAwaiter().GetResult().Count();
 
                 if (_db.Database.GetPendingMigrationsAsync().GetAwaiter().GetResult().Count() > 0) 
                 {
