@@ -96,12 +96,15 @@ namespace Spice.Utility
 			public static string emailMessageOrderStatutsUpdatedGeneric = "Order status updated, status: ";
 
 		}
-
 		public static class DBProvier 
 		{
 			public const string postgres = "postgres";
 			public const string sqlServer = "sqlserver";
+			public const string activeProviderSqlServer = "Microsoft.EntityFrameworkCore.SqlServer";
+			public const string activeProviderPostgres = "Npgsql.EntityFrameworkCore.PostgreSQL";
+			
 		}
+
 
 
 		public static string ConvertToRawHtml(string source)

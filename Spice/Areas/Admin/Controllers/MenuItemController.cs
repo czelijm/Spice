@@ -81,13 +81,15 @@ namespace Spice.Areas.Admin.Controllers
                     await files[0].CopyToAsync(filesStream);//copy stream to file to the server
                 }
                 //in db change image column to the location where iamge is saved
-                menuItemFromDb.Image = @"\"+SD.ImageDefaulInnerPath + MenuItemViewModel.MenuItem.Id.ToString() + extension;
+                //menuItemFromDb.Image = @"\"+SD.ImageDefaulInnerPath + MenuItemViewModel.MenuItem.Id.ToString() + extension;
+                menuItemFromDb.Image = @"/"+SD.ImageDefaulInnerPath + MenuItemViewModel.MenuItem.Id.ToString() + extension;
             }
             else 
             {
                 //File Not uploaded, use default insted
                 var uploads = Path.Combine(webRootPath,(SD.ImageDefaulInnerPath+SD.DefaultFoodImage));
-                var imageInnerPath = @"\"+SD.ImageDefaulInnerPath + MenuItemViewModel.MenuItem.Id.ToString() + ".png";
+                //var imageInnerPath = @"\"+SD.ImageDefaulInnerPath + MenuItemViewModel.MenuItem.Id.ToString() + ".png";
+                var imageInnerPath = @"/"+SD.ImageDefaulInnerPath + MenuItemViewModel.MenuItem.Id.ToString() + ".png";
                 //System.IO.File.Copy(uploads, Path.Combine(webRootPath, imageInnerPath).ToString());
                 System.IO.File.Copy(uploads, webRootPath + imageInnerPath);
                 menuItemFromDb.Image = imageInnerPath;
@@ -154,7 +156,8 @@ namespace Spice.Areas.Admin.Controllers
                 {
                     await files[0].CopyToAsync(filesStream);//copy stream to file to the server
                 }
-                menuItemFromDb.Image = @"\" + SD.ImageDefaulInnerPath + MenuItemViewModel.MenuItem.Id.ToString() + extension;
+                //menuItemFromDb.Image = @"\" + SD.ImageDefaulInnerPath + MenuItemViewModel.MenuItem.Id.ToString() + extension;
+                menuItemFromDb.Image = @"/" + SD.ImageDefaulInnerPath + MenuItemViewModel.MenuItem.Id.ToString() + extension;
             }
 
             menuItemFromDb.Name = MenuItemViewModel.MenuItem.Name; 

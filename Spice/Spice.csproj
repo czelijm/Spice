@@ -3,9 +3,20 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>aspnet-Spice-480E6E84-53B8-4107-87E2-69FA2750D851</UserSecretsId>
+
+    <ContainerDevelopmentMode>Regular</ContainerDevelopmentMode>
+    
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\Backup\**" />
+    <Content Remove="Data\Migrations\Backup\**" />
+    <EmbeddedResource Remove="Data\Migrations\Backup\**" />
+    <EntityDeploy Remove="Data\Migrations\Backup\**" />
+    <None Remove="Data\Migrations\Backup\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Data\Migrations\20201230160112_AddCouponToDataBase.cs" />
@@ -23,16 +34,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="LinqKit" Version="1.1.22" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="3.1.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="3.1.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.10">
+    <PackageReference Include="LinqKit" Version="1.1.23" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="3.1.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="3.1.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.12">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

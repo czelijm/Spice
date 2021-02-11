@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+
 namespace Spice.Data
 {
     public class ApplicationDbContext : IdentityDbContext
@@ -13,7 +14,14 @@ namespace Spice.Data
             : base(options)
         {
         }
+        protected ApplicationDbContext(DbContextOptions options)
+            : base(options)
+        {
+        }
 
+        public ApplicationDbContext()
+        {
+        }
 
         public DbSet<Category> Category {get;set;}
         public DbSet<SubCategory> SubCategory {get;set;}
