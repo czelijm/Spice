@@ -35,7 +35,7 @@ namespace Spice.Data
             );
             base.OnConfiguring(optionsBuilder);
         }
-        // EntityFrameworkCore\Add-Migration InitialMigration -StartupProject Spice -Context SqlServerDbAppContext -OutputDir Migrations/SqlServer
+        // EntityFrameworkCore\Add-Migration InitialMigration -StartupProject Spice -Context SqlServerDbAppContext -OutputDir Data/Migrations/SqlServer -Verbose
 
     }
 

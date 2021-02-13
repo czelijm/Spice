@@ -19,27 +19,30 @@ services:
     build:
       context: .
       dockerfile: Spice/Dockerfile
+    env_file: .env
+    depends_on:
+      - db
+
 #    networks:
 #        frontend:
 #            ipv4_address: 172.20.0.2
-    environment:
-      - DB_PROVIDER=postgres
-      - DB_SERVER=db
-#      - DB_SERVER=172.20.0.3
-      - DB_PORT=5432
-      - DB_DATA_BASE=Spice
-      - DB_USER=postgres
-      - DB_PASSWORD=<YourStrong!Passw0rd>
-      - DB_INTEGRATED_SECURITY=False
-      - DB_PERSIST_SECURITY=False
-    depends_on:
-      - db
+#    environment:
+#      - DB_PROVIDER=postgres
+#      - DB_SERVER=db
+##      - DB_SERVER=172.20.0.3
+#      - DB_PORT=5432
+#      - DB_DATA_BASE=Spice
+#      - DB_USER=postgres
+#      - DB_PASSWORD=<YourStrong!Passw0rd>
+#      - DB_INTEGRATED_SECURITY=False
+#      - DB_PERSIST_SECURITY=False
 
 #networks:
 #  frontend:
 #    ipam:
 #        config:
 #            - subnet: 172.20.0.0/24
+
 #   ports:
 #        - 8080:80
 #        - 8081:443

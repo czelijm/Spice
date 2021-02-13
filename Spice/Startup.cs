@@ -62,6 +62,10 @@ namespace Spice
                                 $"User ID={dbUser};Password={dbPassword}"
                             )
                         );
+
+                        //Ok !
+                        //var factory = new SQLServerHerokuConnectionStringFactory();
+                        //string xd = factory.Build(Environment.GetEnvironmentVariable("DATABASE_URL_TEST_1"));
                     }
                     break;
 
@@ -74,6 +78,10 @@ namespace Spice
                                 $"User ID={dbUser};Password={dbPassword}"
                             )
                         );
+
+                        // OK!
+                        //string xd = PostgresHerokuConnectionStringFactory.Build(Environment.GetEnvironmentVariable("DATABASE_URL_TEST_1"));
+
                     }
                     break;
 
@@ -111,35 +119,35 @@ namespace Spice
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //to add role to user we have to use AddIdentity
             ////services.AddScoped<IEmailSender, EmailSender>();
-            //services.AddIdentity<IdentityUser, IdentityRole>()
-            //    //.AddDefaultUI()
-            //    .AddDefaultTokenProviders() // if someone forgot password
-            //    .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                //.AddDefaultUI()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders(); // if someone forgot password
 
 
-            switch (dbProvider.ToLower())
-            {
-                case SD.DBProvier.sqlServer:
-                    {
-                        services.AddIdentity<IdentityUser, IdentityRole>()
-                        //.AddDefaultUI()
-                            .AddDefaultTokenProviders() // if someone forgot password
-                            .AddEntityFrameworkStores<SqlServerDbAppContext>();
-                    }
-                    break;
-                case SD.DBProvier.postgres:
-                    {
-                        services.AddIdentity<IdentityUser, IdentityRole>()
-                            //.AddDefaultUI()
-                            .AddEntityFrameworkStores<ApplicationDbContext>()
-                            .AddDefaultTokenProviders(); // if someone forgot password
-                    }
-                    break;
-                default:
-                    {
-                        throw new Exception($"Database provider not recognized:{dbProvider}");
-                    }
-            }
+            //switch (dbProvider.ToLower())
+            //{
+            //    case SD.DBProvier.sqlServer:
+            //        {
+            //            services.AddIdentity<IdentityUser, IdentityRole>()
+            //            //.AddDefaultUI()
+            //                .AddDefaultTokenProviders() // if someone forgot password
+            //                .AddEntityFrameworkStores<SqlServerDbAppContext>();
+            //        }
+            //        break;
+            //    case SD.DBProvier.postgres:
+            //        {
+            //            services.AddIdentity<IdentityUser, IdentityRole>()
+            //                //.AddDefaultUI()
+            //                .AddEntityFrameworkStores<ApplicationDbContext>()
+            //                .AddDefaultTokenProviders(); // if someone forgot password
+            //        }
+            //        break;
+            //    default:
+            //        {
+            //            throw new Exception($"Database provider not recognized:{dbProvider}");
+            //        }
+            //}
 
 
 
@@ -165,8 +173,10 @@ namespace Spice
 
             services.AddAuthentication().AddFacebook(facebookOptions=> 
             {
-                facebookOptions.AppId = Configuration.GetSection("Facebook")["AppId"];
-                facebookOptions.AppSecret = Configuration.GetSection("Facebook")["AppSecret"];
+                //facebookOptions.AppId = Configuration.GetSection("Facebook")["AppId"];
+                //facebookOptions.AppSecret = Configuration.GetSection("Facebook")["AppSecret"];
+                facebookOptions.AppId = Environment.GetEnvironmentVariable("FACEBOOK_APPID");
+                facebookOptions.AppSecret = Environment.GetEnvironmentVariable("FACEBOOK_APPSECRET");
             });
 
             services.AddControllersWithViews();
@@ -197,16 +207,27 @@ namespace Spice
 
             app.UseRouting();
 
-            StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
+            //StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
             
-            SD.CompanyInformations.emailAdmin = Configuration.GetSection("SendGrip")["EmailCompany"];
+            //SD.CompanyInformations.emailAdmin = Configuration.GetSection("SendGrip")["EmailCompany"];
 
-            SD.AdminAccountInfo.UserName = Configuration.GetSection("AdminAccountInfo")["UserName"];
-            SD.AdminAccountInfo.Name = Configuration.GetSection("AdminAccountInfo")["Name"];
-            SD.AdminAccountInfo.Email = Configuration.GetSection("AdminAccountInfo")["Email"];
-            SD.AdminAccountInfo.EmailConfirmed = bool.Parse(Configuration.GetSection("AdminAccountInfo")["EmailConfirmed"]);
-            SD.AdminAccountInfo.Phone = Configuration.GetSection("AdminAccountInfo")["Phone"];
-            SD.AdminAccountInfo.Password = Configuration.GetSection("AdminAccountInfo")["Password"];
+            //SD.AdminAccountInfo.UserName = Configuration.GetSection("AdminAccountInfo")["UserName"];
+            //SD.AdminAccountInfo.Name = Configuration.GetSection("AdminAccountInfo")["Name"];
+            //SD.AdminAccountInfo.Email = Configuration.GetSection("AdminAccountInfo")["Email"];
+            //SD.AdminAccountInfo.EmailConfirmed = bool.Parse(Configuration.GetSection("AdminAccountInfo")["EmailConfirmed"]);
+            //SD.AdminAccountInfo.Phone = Configuration.GetSection("AdminAccountInfo")["Phone"];
+            //SD.AdminAccountInfo.Password = Configuration.GetSection("AdminAccountInfo")["Password"];
+            
+            StripeConfiguration.ApiKey =            Environment.GetEnvironmentVariable("STRIPE_SECRETKEY");
+            SD.CompanyInformations.emailAdmin =     Environment.GetEnvironmentVariable("SENDGRIP_EMAILCOMPANY");
+            SD.AdminAccountInfo.UserName =          Environment.GetEnvironmentVariable("ADMINACCOUNTINFO_USERNAME");
+            SD.AdminAccountInfo.Name =              Environment.GetEnvironmentVariable("ADMINACCOUNTINFO_NAME");
+            SD.AdminAccountInfo.Email =             Environment.GetEnvironmentVariable("ADMINACCOUNTINFO_EMAIL");
+            SD.AdminAccountInfo.EmailConfirmed =    bool.Parse(Environment.GetEnvironmentVariable("ADMINACCOUNTINFO_EMAILCONFIRMED"));
+            SD.AdminAccountInfo.Phone =             Environment.GetEnvironmentVariable("ADMINACCOUNTINFO_PHONE");
+            SD.AdminAccountInfo.Password =          Environment.GetEnvironmentVariable("ADMINACCOUNTINFO_PASSWORD");
+
+
             dbInitializer.Initialize();
 
 
