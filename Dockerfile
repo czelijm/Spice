@@ -19,6 +19,11 @@ RUN dotnet dev-certs https --clean
 # RUN dotnet dev-certs https --trust
 
 FROM base AS final
+#important for heroku!!!!
+#ENV ASPNETCORE_URLS="http://*:$PORT"
+#ENV ASPNETCORE_ENVIRONMENT="Development"
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Spice.dll"]
+#ENTRYPOINT ["dotnet", "Spice.dll"]
+#important for heroku!!!!
+CMD ASPNETCORE_URLS="http://*:$PORT" dotnet Spice.dll 

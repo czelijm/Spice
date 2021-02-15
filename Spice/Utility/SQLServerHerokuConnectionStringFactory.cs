@@ -19,7 +19,8 @@ namespace Spice.Utility
 
         public string Build(string url)
         {
-            return BuildForLocalDockerDeveloment();//for development only
+            //return BuildForLocalDockerDeveloment();//for development only
+            return BuildForProductionDockerDeveloment(url);//for development only
         }
 
         public string Build() 
