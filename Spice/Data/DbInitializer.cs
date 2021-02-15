@@ -22,7 +22,7 @@ namespace Spice.Data
             _roleManager = roleManager;
         }
 
-        public async void Initialize()
+        public void Initialize() // never use async void XD
         {
             //instead of await and async method we can add ACTION_ASYNC.GetAwaiter().GetResult()
 
@@ -68,9 +68,9 @@ namespace Spice.Data
                 LastName = SD.AdminAccountInfo.Name.Split(" ")[1],
             },SD.AdminAccountInfo.Password).GetAwaiter().GetResult();
 
-            IdentityUser user = await _db.Users.FirstOrDefaultAsync(u => u.Email.Equals(SD.AdminAccountInfo.Email));
+            IdentityUser user = _db.Users.FirstOrDefaultAsync(u => u.Email.Equals(SD.AdminAccountInfo.Email)).GetAwaiter().GetResult();
 
-            await _userManager.AddToRoleAsync(user,SD.ManagerUser);
+            _userManager.AddToRoleAsync(user,SD.ManagerUser).GetAwaiter().GetResult();
 
 
         }

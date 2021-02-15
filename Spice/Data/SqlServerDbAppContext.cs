@@ -19,48 +19,33 @@ namespace Spice.Data
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var dbServerName = Environment.GetEnvironmentVariable("DB_SERVER") ?? "localhost";
-            var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
-            var dataBase = Environment.GetEnvironmentVariable("DB_DATA_BASE") ?? "Spice";
-            var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "postgres";
-            var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "<YourStrong!Passw0rd>";
-            var dbItegratedSecurity = Environment.GetEnvironmentVariable("DB_INTEGRATED_SECURITY") ?? "False";
-            var dbPersistSecurityInfo = Environment.GetEnvironmentVariable("DB_PERSIST_SECURITY") ?? "False";
+        //Needed for EntityFramework for migrations reasons
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
 
-            optionsBuilder.UseSqlServer(
-                $"Server={dbServerName},{dbPort};Database={dataBase};Integrated Security={dbItegratedSecurity};Persist Security Info={dbPersistSecurityInfo};" +
-                $"User ID={dbUser};Password={dbPassword}"
-            );
-            base.OnConfiguring(optionsBuilder);
-        }
+        //    optionsBuilder.UseSqlServer(
+        //        (new SQLServerHerokuConnectionStringFactory()).Build()
+        //    );
+        //    base.OnConfiguring(optionsBuilder);
+        //}
         // EntityFrameworkCore\Add-Migration InitialMigration -StartupProject Spice -Context SqlServerDbAppContext -OutputDir Data/Migrations/SqlServer -Verbose
 
     }
 
     //For EntityFramework Migrations
-    public class SqlServerDbAppFactory : IDesignTimeDbContextFactory<SqlServerDbAppContext>
-    {
-        public SqlServerDbAppContext CreateDbContext(string[] args)
-        {
-            var dbServerName = Environment.GetEnvironmentVariable("DB_SERVER") ?? "localhost";
-            var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
-            var dataBase = Environment.GetEnvironmentVariable("DB_DATA_BASE") ?? "Spice";
-            var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "postgres";
-            var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "<YourStrong!Passw0rd>";
-            var dbItegratedSecurity = Environment.GetEnvironmentVariable("DB_INTEGRATED_SECURITY") ?? "False";
-            var dbPersistSecurityInfo = Environment.GetEnvironmentVariable("DB_PERSIST_SECURITY") ?? "False";
+    //public class SqlServerDbAppFactory : IDesignTimeDbContextFactory<SqlServerDbAppContext>
+    //{
+    //    public SqlServerDbAppContext CreateDbContext(string[] args)
+    //    {
 
-            var builder = new DbContextOptionsBuilder<SqlServerDbAppContext>();
-            builder.UseSqlServer(
-                $"Server={dbServerName},{dbPort};Database={dataBase};Integrated Security={dbItegratedSecurity};Persist Security Info={dbPersistSecurityInfo};" +
-                $"User ID={dbUser};Password={dbPassword}"
-            );
+    //        var builder = new DbContextOptionsBuilder<SqlServerDbAppContext>();
+    //        builder.UseSqlServer(
+    //            (new SQLServerHerokuConnectionStringFactory()).Build()
+    //        );
 
-            return new SqlServerDbAppContext(builder.Options);
-        }
+    //        return new SqlServerDbAppContext(builder.Options);
+    //    }
 
-    }
+    //}
 
 }

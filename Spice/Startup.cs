@@ -55,12 +55,12 @@ namespace Spice
             {
                 case SD.DBProvier.sqlServer:
                     {
-                        services.AddDbContext<ApplicationDbContext,SqlServerDbAppContext>(options =>
-                            options.UseSqlServer
-                            (
-                                $"Server={dbServerName},{dbPort};Database={dataBase};Integrated Security={dbItegratedSecurity};Persist Security Info={dbPersistSecurityInfo};" +
-                                $"User ID={dbUser};Password={dbPassword}"
-                            )
+                        services.AddDbContext<ApplicationDbContext,SqlServerDbAppContext>(
+                            //options =>
+                            //options.UseSqlServer
+                            //(
+                            //    (new SQLServerHerokuConnectionStringFactory()).Build()
+                            //)
                         );
 
                         //Ok !
@@ -71,16 +71,19 @@ namespace Spice
 
                 case SD.DBProvier.postgres:
                     {
-                        services.AddDbContext<ApplicationDbContext, PostgresDbAppContext>(options =>
+                        services.AddDbContext<ApplicationDbContext, PostgresDbAppContext>(
+                            options =>
                             options.UseNpgsql
                             (
-                                $"Host={dbServerName};Port={dbPort};Database={dataBase};" +
-                                $"User ID={dbUser};Password={dbPassword}"
+                                (new PostgresHerokuConnectionStringFactory("False", "False", "Require", "True")).Build()
+                                
+
                             )
+                            //,ServiceLifetime.Transient
                         );
 
                         // OK!
-                        //string xd = PostgresHerokuConnectionStringFactory.Build(Environment.GetEnvironmentVariable("DATABASE_URL_TEST_1"));
+                        //string xd = (new PostgresHerokuConnectionStringFactory()).Build(Environment.GetEnvironmentVariable("DATABASE_URL_TEST"));
 
                     }
                     break;
@@ -121,34 +124,8 @@ namespace Spice
             ////services.AddScoped<IEmailSender, EmailSender>();
             services.AddIdentity<IdentityUser, IdentityRole>()
                 //.AddDefaultUI()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddEntityFrameworkStores<ApplicationDbContext>() // it must be the class that directly ingeret from IdentityDbContext, becouse it will generete service builder crashes, regardless on number of dbcontexts class
                 .AddDefaultTokenProviders(); // if someone forgot password
-
-
-            //switch (dbProvider.ToLower())
-            //{
-            //    case SD.DBProvier.sqlServer:
-            //        {
-            //            services.AddIdentity<IdentityUser, IdentityRole>()
-            //            //.AddDefaultUI()
-            //                .AddDefaultTokenProviders() // if someone forgot password
-            //                .AddEntityFrameworkStores<SqlServerDbAppContext>();
-            //        }
-            //        break;
-            //    case SD.DBProvier.postgres:
-            //        {
-            //            services.AddIdentity<IdentityUser, IdentityRole>()
-            //                //.AddDefaultUI()
-            //                .AddEntityFrameworkStores<ApplicationDbContext>()
-            //                .AddDefaultTokenProviders(); // if someone forgot password
-            //        }
-            //        break;
-            //    default:
-            //        {
-            //            throw new Exception($"Database provider not recognized:{dbProvider}");
-            //        }
-            //}
-
 
 
             //Add dbInitializer to scope, we'll run initialize() in Configure()
@@ -227,9 +204,7 @@ namespace Spice
             SD.AdminAccountInfo.Phone =             Environment.GetEnvironmentVariable("ADMINACCOUNTINFO_PHONE");
             SD.AdminAccountInfo.Password =          Environment.GetEnvironmentVariable("ADMINACCOUNTINFO_PASSWORD");
 
-
             dbInitializer.Initialize();
-
 
             app.UseAuthentication();
             app.UseAuthorization();
