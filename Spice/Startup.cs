@@ -39,16 +39,6 @@ namespace Spice
 
 
             var dbProvider = Environment.GetEnvironmentVariable("DB_PROVIDER") ?? SD.DBProvier.postgres;
-            var dbServerName = Environment.GetEnvironmentVariable("DB_SERVER") ?? "localhost";
-            var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
-            var dataBase = Environment.GetEnvironmentVariable("DB_DATA_BASE") ?? "Spice";
-            var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "postgres";
-            var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "<YourStrong!Passw0rd>";
-            var dbItegratedSecurity = Environment.GetEnvironmentVariable("DB_INTEGRATED_SECURITY") ?? "False";
-            var dbPersistSecurityInfo = Environment.GetEnvironmentVariable("DB_PERSIST_SECURITY") ?? "False";
-
-            //ExtraSpaceNeeded??!!
-            //Environment.GetEnvironmentVariable("NAME_OF_VARIABLE ");
 
             //initialize context depend on db provider
             switch (dbProvider.ToLower())
@@ -56,11 +46,11 @@ namespace Spice
                 case SD.DBProvier.sqlServer:
                     {
                         services.AddDbContext<ApplicationDbContext,SqlServerDbAppContext>(
-                            //options =>
-                            //options.UseSqlServer
-                            //(
-                            //    (new SQLServerHerokuConnectionStringFactory()).Build()
-                            //)
+                            options =>
+                            options.UseSqlServer
+                            (
+                                (new SQLServerHerokuConnectionStringFactory()).Build()
+                            )
                         );
 
                         //Ok !
@@ -72,14 +62,12 @@ namespace Spice
                 case SD.DBProvier.postgres:
                     {
                         services.AddDbContext<ApplicationDbContext, PostgresDbAppContext>(
-                            options =>
-                            options.UseNpgsql
-                            (
-                                (new PostgresHerokuConnectionStringFactory("False", "False", "Require", "True")).Build()
-                                
-
-                            )
-                            //,ServiceLifetime.Transient
+                        options =>
+                        options.UseNpgsql
+                        (
+                            (new PostgresHerokuConnectionStringFactory("False", "False", "Require", "True")).Build()
+                        )
+                        //,ServiceLifetime.Transient
                         );
 
                         // OK!
@@ -124,7 +112,7 @@ namespace Spice
             ////services.AddScoped<IEmailSender, EmailSender>();
             services.AddIdentity<IdentityUser, IdentityRole>()
                 //.AddDefaultUI()
-                .AddEntityFrameworkStores<ApplicationDbContext>() // it must be the class that directly ingeret from IdentityDbContext, becouse it will generete service builder crashes, regardless on number of dbcontexts class
+                .AddEntityFrameworkStores<ApplicationDbContext>() // it must be the class that directly ingeret from IdentityDbContext, becouse it will generete service builder crashes, regardless on number of dbcontexts class (number of database provider) 
                 .AddDefaultTokenProviders(); // if someone forgot password
 
 

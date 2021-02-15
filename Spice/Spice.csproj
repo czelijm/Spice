@@ -11,10 +11,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\**" />
     <Compile Remove="Data\Migrations\Backup\**" />
+    <Content Remove="Controllers\**" />
     <Content Remove="Data\Migrations\Backup\**" />
+    <EmbeddedResource Remove="Controllers\**" />
     <EmbeddedResource Remove="Data\Migrations\Backup\**" />
+    <EntityDeploy Remove="Controllers\**" />
     <EntityDeploy Remove="Data\Migrations\Backup\**" />
+    <None Remove="Controllers\**" />
     <None Remove="Data\Migrations\Backup\**" />
   </ItemGroup>
 
@@ -53,10 +58,6 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
     <PackageReference Include="SendGrid" Version="9.22.0" />
     <PackageReference Include="Stripe.net" Version="39.32.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

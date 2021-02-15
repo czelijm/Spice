@@ -21,7 +21,7 @@ namespace Spice.Data
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    optionsBuilder.UseNpgsql(
-        //        (new PostgresHerokuConnectionStringFactory("True", "True", "Require", "True")).Build()
+        //        (new PostgresHerokuConnectionStringFactory("False", "False", "Require", "True")).Build()
         //    );
         //    base.OnConfiguring(optionsBuilder);
         //}
