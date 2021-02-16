@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="~/css/jquery-ui.min.css" />
     @*<link rel="stylesheet" href="~/css/jquery-ui.css" />*@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.13.16/jquery.timepicker.min.css" integrity="sha512-GgUcFJ5lgRdt/8m5A0d0qEnsoi8cDoF0d6q+RirBPtL423Qsj5cI9OxQ5hWvPi5jjvTLM/YhaaFuIeWCLi6lyQ==" crossorigin="anonymous" />
-  
+
 </head>
 <body class="search-background">
     <header>
@@ -101,10 +101,15 @@
 
                             }*@
 
-                        <li style="color:white;">
+                        <li class="nav-item" style="color:white;">
                             <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="nav-link">
                                 <i class="fas fa-shopping-cart"></i> &nbsp; (@count)
                             </a>
+                        </li>
+
+
+                        <li class="nav-item ">
+                            <a class="nav-link text-danger font-weight-bolder">Demo App Only</a>
                         </li>
 
 
@@ -116,6 +121,8 @@
                                 <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>*@
                     </ul>
+
+
 
                     <!-- cookie warning toast -->
                     <div class="fixed-bottom p-4">
@@ -137,15 +144,79 @@
                         </div>
                     </div>
 
-
-
                 </div>
             </div>
         </nav>
+
+
+
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
+
+            @* "Sticky Button With Pop Up" *@
+            <div id="feedback">
+                <a href="#popup1">Demo App Info</a>
+            </div>
+
+            @*Pooped box*@
+            <div id="popup1" class="overlay p-5">
+                <div class="popup">
+                    <div class="div1" >
+                        <div class="container" style="background:#fff">
+                            <div class="row">
+                                <div class=" offset-11 col-1">
+                                    <a class="close" href="#">×</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <p class="text-danger font-weight-bolder">
+                                    This is the demo app of the Restaurant.
+                                </p>
+                                @*<br>*@
+                                <p class="text-danger font-weight-bolder">
+                                    This website isn't provide any real services.
+                                </p>
+                                @*<br>*@
+                                <p class="text-danger font-weight-bolder">
+                                    It was created for the portfolio reasons.
+                                </p>
+                                <br>
+                                <div class="text-dark">
+                                    <p class="">
+                                        You can register on this website by making the account of logging via Facebook. Review the entire contents. Add the desired items to the chart.
+                                    </p>
+                                    <p class="">
+                                        You can simulate payment via Stripe sevice by using credit card credentials provided by stripe. Example below
+                                    </p>
+                                    <p class="text-info mb-0">
+                                        yourChoosenEmailAdress
+                                        <br>
+                                        4242 4242 4242 4242
+                                        <br>
+                                        <div class="row mt-0 text-info">
+                                            <div class="col-1">02/24</div>
+                                            <div class="col-1 offset-2">042</div>
+                                        </div>
+                                    </p>
+                                    <p>
+                                        Using account with diffrent roles assigned you can expirience another functionalities of app. Order Confirmation, Order Submit, Confirm dish preparation, PickupConfirmation, Dish Creating, Creating Employees Accound and others.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+
         </main>
     </div>
 

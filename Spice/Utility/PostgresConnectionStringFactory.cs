@@ -26,8 +26,8 @@ namespace Spice.Utility
 
         public string Build(string url)
         {
-            return BuildForLocalDockerDeveloment(); // only for development or EntityFramework Migration Create
-           // return BuildForProductionDockerDeveloment(url); // production
+            //return BuildForLocalDockerDeveloment(); // only for development or EntityFramework Migration Create
+            return BuildForProductionDockerDeveloment(url); // production
         }
         public string Build()
         {
