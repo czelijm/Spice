@@ -26,7 +26,7 @@ namespace Spice.Data
         //    base.OnConfiguring(optionsBuilder);
         //}
 
-        // EntityFrameworkCore\Add-Migration InitialMigration -StartupProject Spice -Context PostgresDbAppContext -OutputDir Migrations/Postgres
+        // EntityFrameworkCore\Add-Migration InitialMigration -StartupProject Spice -Context PostgresDbAppContext -OutputDir Data/Migrations/Postgres -Verbose
 
     }
     //public class PostgresDbAppFactory : IDesignTimeDbContextFactory<PostgresDbAppContext>

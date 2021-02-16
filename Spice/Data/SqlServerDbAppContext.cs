@@ -20,14 +20,14 @@ namespace Spice.Data
         }
 
         //Needed for EntityFramework for migrations reasons
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
 
-        //    optionsBuilder.UseSqlServer(
-        //        (new SQLServerHerokuConnectionStringFactory()).Build()
-        //    );
-        //    base.OnConfiguring(optionsBuilder);
-        //}
+            optionsBuilder.UseSqlServer(
+                (new SQLServerHerokuConnectionStringFactory()).Build()
+            );
+            base.OnConfiguring(optionsBuilder);
+        }
         // EntityFrameworkCore\Add-Migration InitialMigration -StartupProject Spice -Context SqlServerDbAppContext -OutputDir Data/Migrations/SqlServer -Verbose
 
     }

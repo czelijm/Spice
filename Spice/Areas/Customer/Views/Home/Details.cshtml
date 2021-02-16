@@ -6,6 +6,17 @@
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //For image, which is hosted on the web server we need only to provide path to the image. For image from DB we need to convert byte[] to Base64String
+
+    //Convertion byteArray -> String understanded by HTML
+    String imgSrc = null;
+
+    if (!(Model.MenuItem.Image is null) && Model.MenuItem.Image.Count() > 0)
+    {
+        imgSrc = String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(Model.MenuItem.Image));
+    }
+
 }
 
 <br />
@@ -20,7 +31,7 @@
         <div asp-validation-summary="ModelOnly" class="text-danger" />
 
         <div class="col-12 pb-4 d-md-none">
-            <img src="@Model.MenuItem.Image" width="100%" style="border-radius:5px; border: 1px solid #bbb9b9" alt="MenuItemImage" />
+            <img src="@imgSrc" width="100%" style="border-radius:5px; border: 1px solid #bbb9b9" alt="MenuItemImage" />
         </div>
 
         <div class="col-md-8">
@@ -118,7 +129,7 @@
 
         @* DO not display the image, display when it is md size or bigger *@
         <div class="col-3 offset-1 d-none d-md-block">
-            <img src="@Model.MenuItem.Image" width="100%" style="border-radius:5px; border: 1px solid #bbb9b9" alt="MenuItemImage" />
+            <img src="@imgSrc" width="100%" style="border-radius:5px; border: 1px solid #bbb9b9" alt="MenuItemImage" />
         </div>
 
 

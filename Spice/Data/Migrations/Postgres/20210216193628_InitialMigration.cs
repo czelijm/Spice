@@ -1,7 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Spice.Data.Migrations.SqlServer
+namespace Spice.Data.Migrations.Postgres
 {
     public partial class InitialMigration : Migration
     {
@@ -105,7 +106,7 @@ namespace Spice.Data.Migrations.SqlServer
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -126,7 +127,7 @@ namespace Spice.Data.Migrations.SqlServer
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -265,7 +266,7 @@ namespace Spice.Data.Migrations.SqlServer
                     Name = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     Spicyness = table.Column<string>(nullable: true),
-                    Image = table.Column<string>(nullable: true),
+                    Image = table.Column<byte[]>(nullable: true),
                     CategoryId = table.Column<Guid>(nullable: false),
                     SubCategoryId = table.Column<Guid>(nullable: false),
                     Price = table.Column<double>(nullable: false)
@@ -326,8 +327,7 @@ namespace Spice.Data.Migrations.SqlServer
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -353,8 +353,7 @@ namespace Spice.Data.Migrations.SqlServer
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_MenuItem_CategoryId",

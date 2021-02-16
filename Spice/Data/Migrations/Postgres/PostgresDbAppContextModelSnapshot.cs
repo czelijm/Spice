@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Spice.Data;
 
-namespace Spice.Migrations.Postgres
+namespace Spice.Data.Migrations.Postgres
 {
     [DbContext(typeof(PostgresDbAppContext))]
     partial class PostgresDbAppContextModelSnapshot : ModelSnapshot
@@ -286,8 +286,8 @@ namespace Spice.Migrations.Postgres
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("text");
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("bytea");
 
                     b.Property<string>("Name")
                         .IsRequired()

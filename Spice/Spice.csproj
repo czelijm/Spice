@@ -60,4 +60,8 @@
     <PackageReference Include="Stripe.net" Version="39.32.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Migrations\SqlServer\" />
+  </ItemGroup>
+
 </Project>

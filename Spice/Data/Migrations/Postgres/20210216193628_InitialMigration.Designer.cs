@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Spice.Data;
 
-namespace Spice.Migrations.Postgres
+namespace Spice.Data.Migrations.Postgres
 {
     [DbContext(typeof(PostgresDbAppContext))]
-    [Migration("20210211181823_InitialMigration")]
+    [Migration("20210216193628_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -288,8 +288,8 @@ namespace Spice.Migrations.Postgres
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("text");
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("bytea");
 
                     b.Property<string>("Name")
                         .IsRequired()
