@@ -20,8 +20,16 @@ namespace Spice.Models
             Spicy=2,
             VerySpicy=3
         }
-        //see if the images is in the servers, images are on the servers, in db we store only paths
-        public string Image { get; set; }
+
+        ////Old way--------------------------------------------------------------------------------------------
+        ////see if the images is in the servers, images are on the servers, in db we store only paths
+        //public string Image { get; set; }
+        ////cons if server stop the docker image of the server, then all images will be gone :(
+        ////---------------------------------------------------------------------------------------------------        
+
+        //New way image store in Db, after server delete, images still be existing in Db
+        public byte[] Image { get; set; }
+        
         [Display(Name="Category")]
         public Guid CategoryId { get; set; }
         [ForeignKey("CategoryId")]

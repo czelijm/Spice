@@ -55,17 +55,20 @@ namespace Spice.Areas.Admin.Controllers
             {
                 //File Uploaded
 
+                ////image -> streamOfBytes
+                //byte[] p1 = null;
+                //using (var fs1 = files[0].OpenReadStream()) // start reading the file 
+                //{
+                //    using (var ms1 = new MemoryStream())//memory stream
+                //    {
+                //        await fs1.CopyToAsync(ms1);
+                //        p1 = ms1.ToArray();
+                //    }
+                //}
+                //Coupon.Picture = p1;
+
                 //image -> streamOfBytes
-                byte[] p1 = null;
-                using (var fs1 = files[0].OpenReadStream()) // start reading the file 
-                {
-                    using (var ms1 = new MemoryStream())//memory stream
-                    {
-                        await fs1.CopyToAsync(ms1);
-                        p1 = ms1.ToArray();
-                    }
-                }
-                Coupon.Picture = p1;
+                Coupon.Picture = await ModelUtilities.FormFileToByteArrayAsync(files[0]);
             }
 
             await _db.Coupon.AddAsync(Coupon);
