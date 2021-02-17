@@ -19,11 +19,27 @@ RUN dotnet dev-certs https --clean
 # RUN dotnet dev-certs https --trust
 
 FROM base AS final
-#important for heroku!!!!
-#ENV ASPNETCORE_URLS="http://*:$PORT"
-#ENV ASPNETCORE_ENVIRONMENT="Development"
+#important for heroku!!!! but not uncomment out
+ENV ASPNETCORE_URLS="http://*:12345"
+ENV ASPNETCORE_ENVIRONMENT="Development"
+# Add secret env variables
+ENV STRIPE_SECRETKEY=""
+ENV STRIPE_PUBLISHABLEKEY=""
+ENV FACEBOOK_APPID=""
+ENV FACEBOOK_APPSECRET=""
+ENV SENDGRIP_APIKEY=""
+ENV SENDGRIP_EMAILCOMPANY=""
+ENV ADMINACCOUNTINFO_USERNAME=""
+ENV ADMINACCOUNTINFO_EMAIL=""
+ENV ADMINACCOUNTINFO_EMAILCONFIRMED=""
+ENV ADMINACCOUNTINFO_NAME=""
+ENV ADMINACCOUNTINFO_PHONE=""
+ENV ADMINACCOUNTINFO_PASSWORD=""
+ENV DATABASE_URL=""
 WORKDIR /app
 COPY --from=publish /app/publish .
-#ENTRYPOINT ["dotnet", "Spice.dll"]
+#for local development
+ENTRYPOINT ["dotnet", "Spice.dll"]
 #important for heroku!!!!
-CMD ASPNETCORE_URLS="http://*:$PORT" dotnet Spice.dll 
+#for production
+# CMD ASPNETCORE_URLS="http://*:$PORT" dotnet Spice.dll 

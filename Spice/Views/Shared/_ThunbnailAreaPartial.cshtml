@@ -14,7 +14,7 @@
         {
             <div class="container border border-info rounded col-12 mb-2 mt-2 p-1">
                 <div class="row ">
-                    <div class="col-md-3 col-sm-12 ">
+                    <div class="col-md-3 col-sm-12 text-sm-center text-lg-left">
                         @{ 
                             //For image, which is hosted on the web server we need only to provide path to the image. For image from DB we need to convert byte[] to Base64String
 
@@ -27,7 +27,7 @@
                             }
                         }
 
-                        <img src="@imgSrc" width="99%" style="border-radius:5px; border:1px solid #bbb9b9;" />
+                        <img src="@imgSrc" class="img-max"  width="99%" style="border-radius:5px; border:1px solid #bbb9b9;" />
                     </div>
                     <div class="col-md-9 col-sm-12 ">
                         <div class="row pr-3">

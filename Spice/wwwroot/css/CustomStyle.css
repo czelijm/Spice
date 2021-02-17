@@ -205,3 +205,18 @@ left: 25px;*/
         float: left;
     }
 }
+
+/*image sizennig*/
+@media screen and (min-width: 801px) {
+    .img-max {
+        max-width: 200px !important;
+        max-height: 200px !important;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .img-max {
+        max-width: 400px !important;
+        max-height: 400px !important;
+    }
+}
